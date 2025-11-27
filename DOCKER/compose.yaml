@@ -13,4 +13,5 @@ services:
       - ./heliwatch:/data
     ports:
       - 8003:8003
+      - 8004:8004
     restart: unless-stopped
