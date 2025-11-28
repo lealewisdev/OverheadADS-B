@@ -16,6 +16,7 @@ ICAO = []
 ADSBFI = "https://opendata.adsb.fi/api/v2/lat/" + str(LAT) + "/lon/" + str(LON) + "/dist/" + str(DST)
 HEX = ""
 REG = ""
+TYPE = ""
 
 # HEXDB API provides information on the owner (among other things) of the queried aircraft (in this case a heli)
 HEXDB = "https://hexdb.io/api/v1/aircraft/"
@@ -33,42 +34,41 @@ class HandlerA(BaseHTTPRequestHandler):
         global OWNER
         global SQUAWK
         global REG
+        global TYPE
         self.send_response(200)
         self.end_headers()
         data = requests.get(url=ADSBFI).json()
         aircrafts = data["aircraft"]
         if aircrafts:
             aircrafts.sort(key=lambda x: x["dst"])
-            nearest_heli = identify_nearest_heli(aircrafts)
-            if nearest_heli:
-                if 'hex' in nearest_heli[0] and not nearest_heli[0]['hex'] == HEX:
-                    HEX = nearest_heli[0]['hex']
-                    SQUAWK = ""
-                    if 'squawk' in nearest_heli[0]:
-                        SQUAWK=SQUAWKS.get(nearest_heli[0]['squawk'])
-                        if SQUAWK is None:
-                            SQUAWK=""
-                    if 'r' in nearest_heli[0] and not nearest_heli[0]['r'] == REG:
-                        REG = nearest_heli[0]['r']
-                    owner = requests.get(url=HEXDB + HEX).json().get('RegisteredOwners')
-                    if owner:
-                        OWNER = owner
-                        if OWNER== "Private":
-                            message = f"Private {HEX}\n{SQUAWK}"
-                        else:
-                            message = f"{HEX} {OWNER}\n{SQUAWK}"
-                        self.wfile.write(message.encode('utf-8'))
-                    else:
-                        message = f"{HEX} not in HEXDB\n{SQUAWK}"
-                        self.wfile.write(message.encode('utf-8'))
+            if 'hex' in aircrafts[0] and not aircrafts[0]['hex'] == HEX:
+                HEX = aircrafts[0]['hex']
+                if 'squawk' in aircrafts[0]:
+                    SQUAWK=SQUAWKS.get(aircrafts[0]['squawk'])
+                    if SQUAWK is None:
+                        SQUAWK= " "
                 else:
-                    message = f"{HEX} {OWNER}\n{SQUAWK}"
-                    self.wfile.write(message.encode('utf-8'))
-            else:
-                message = f"Not a Heli {HEX}\n{SQUAWK}"
-                self.wfile.write(message.encode('utf-8'))
+                    SQUAWK = " "
+                if 'r' in aircrafts[0]:
+                    REG = aircrafts[0]['r']
+                if aircrafts[0]['t'] in ICAO:
+                    TYPE = "HELI"
+                else:
+                    TYPE = "PLANE"
+                owner = requests.get(url=HEXDB + HEX).json().get('RegisteredOwners')
+                if owner:
+                    OWNER = owner
+                else:
+                    OWNER  = " "
+            message = f"{TYPE} {HEX} {OWNER}\n{SQUAWK}"
+            self.wfile.write(message.encode('utf-8'))
         else:
             self.wfile.write("Aircraft Free Zone".encode('utf-8'))
+            HEX = ""
+            OWNER = ""
+            SQUAWK = ""
+            REG = ""
+            TYPE = ""
 
 # Create HTTP Server that redirects to the Flightradar24 entry of the nearest aircraft
 class HandlerB(BaseHTTPRequestHandler):
@@ -81,7 +81,7 @@ class HandlerB(BaseHTTPRequestHandler):
             except Exception as e:
                 self.send_response(500)
                 self.end_headers()
-                self.wfile.write(b"Error contacting FR24")
+                self.wfile.write("Error contacting FR24")
                 return
 
             final_url = r.url
@@ -90,7 +90,7 @@ class HandlerB(BaseHTTPRequestHandler):
                 self.send_response(302)
                 self.send_header("Location", final_url)
                 self.end_headers()
-                self.wfile.write(b"No FR24 Entry")
+                self.wfile.write("No FR24 Entry")
             else:
                 self.send_response(302)
                 self.send_header("Location", final_url)
@@ -98,7 +98,7 @@ class HandlerB(BaseHTTPRequestHandler):
         else:
             self.send_response(200)
             self.end_headers()
-            self.wfile.write(b'Aircraft Free Zone'.encode('utf-8'))
+            self.wfile.write('Aircraft Free Zone'.encode('utf-8'))
 
 def run_server(port, handler):
     server = HTTPServer(("127.0.0.1", port), handler)
