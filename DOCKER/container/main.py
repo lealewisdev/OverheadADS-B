@@ -90,7 +90,7 @@ class HandlerB(BaseHTTPRequestHandler):
                 self.send_response(302)
                 self.send_header("Location", final_url)
                 self.end_headers()
-                self.wfile.write("No FR24 Entry")
+                self.wfile.write("No FR24 Entry".encode('utf-8'))
             else:
                 self.send_response(302)
                 self.send_header("Location", final_url)
@@ -98,7 +98,7 @@ class HandlerB(BaseHTTPRequestHandler):
         else:
             self.send_response(200)
             self.end_headers()
-            self.wfile.write('Aircraft Free Zone'.encode('utf-8'))
+            self.wfile.write("Aircraft Free Zone".encode('utf-8'))
 
 def run_server(port, handler):
     server = HTTPServer(("127.0.0.1", port), handler)
