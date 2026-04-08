@@ -7,7 +7,7 @@ import threading
 # Variables provided in ../.env . Defaults to 200nm around London (England)
 LAT = os.getenv('FEEDER_LAT', '51.5072')
 LON = os.getenv('FEEDER_LONG', '0.1276')
-DST = os.getenv('HELIWATCH_RAD_NAUTICAL_MILES', '200')
+DST = os.getenv('OVERHEADADSB_RAD_NAUTICAL_MILES', '200')
 
 SQUAWKS = {}
 ICAO = []
