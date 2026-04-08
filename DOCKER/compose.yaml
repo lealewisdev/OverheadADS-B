@@ -1,6 +1,6 @@
 services:
  heliwatch:
-    container_name: heliwatch
+    container_name: overheadadsb
     command: python main.py
     environment:
       - LAT=${FEEDER_LAT}
@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./heliwatch:/data
+      - ./overheadadsb:/data
     ports:
       - 8003:8003
       - 8004:8004
