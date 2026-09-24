@@ -2,9 +2,11 @@ name: overheadadsb
 
 services:
   overheadadsb:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: ${REGISTRY}/${REGISTRY_USER}/overheadadsb:${IMAGE_TAG}
+    #    Building locally is not compatible with the provided ansible playbooks
+    #    build:
+    #      context: ./
+    #      dockerfile: Dockerfile
     container_name: overheadadsb
     environment:
       TZ: ${TZ}
@@ -13,6 +15,7 @@ services:
       RAD_NM: ${RAD_NM}
       POLL_INT: ${POLL_INT}
       PORT: ${PORT}
+      HTTP_TIMEOUT: ${HTTP_TIMEOUT}
       OWNER_POLL_CACHE_MAX: ${OWNER_POLL_CACHE_MAX}
     networks:
       - traefik
