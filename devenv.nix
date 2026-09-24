@@ -19,6 +19,10 @@
     pkgs.updatecli
   ];
 
+  env.DOCKER_HOST = "unix://$XDG_RUNTIME_DIR/docker.sock";
+
+  processes.dockerd.exec = "dockerd-rootless";
+
   /*
   scripts.lint.exec = "prek run --all-files";
 
