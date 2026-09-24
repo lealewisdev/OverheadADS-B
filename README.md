@@ -316,3 +316,5 @@ plus a `registry_password` environment variable.
    instead of just helicopters
 3. Switch from [deeside](https://www.deeside.com/squawk-codes/) to UK
    AIP ENR 1.6 for squawk codes
+4. Packaging with nFPM
+5. Updatecli to premt trivy failing from fixable issues

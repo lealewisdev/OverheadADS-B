@@ -19,7 +19,9 @@
     pkgs.updatecli
   ];
 
-  env.DOCKER_HOST = "unix://$XDG_RUNTIME_DIR/docker.sock";
+  enterShell = ''
+    export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/docker.sock"
+  '';
 
   processes.dockerd.exec = "dockerd-rootless";
 
