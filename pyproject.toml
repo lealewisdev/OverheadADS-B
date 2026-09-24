@@ -1,15 +1,37 @@
 [project]
-name = "HeliWatch"
-version = "0.1.0"
-description = "Add your description here"
-requires-python = ">=3.11"
+name = "overheadadsb"
+version = "1.0.0"
+description = "ADS-B telemetry enrichment API"
+requires-python = ">=3.14"
 dependencies = [
-    "beautifulsoup4>=4.14.2",
-    "nodriver>=0.48.0",
-    "requests>=2.32.5",
+    "fastapi>=0.139.0",
+    "httpx>=0.28.1",
+    "prometheus-fastapi-instrumentator>=8.0.2",
+    "pydantic>=2.13.4",
+    "uvicorn>=0.51.0",
 ]
 
-[tool.uv.workspace]
-members = [
-    "ADSB/ICAO_8643_50",
+[dependency-groups]
+dev = [
+    "defusedxml>=0.7.1",
+    "pytest>=9.1.1",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.9.0",
+    "basedpyright>=1.39.10",
+    "pdfplumber>=0.11.10",
+    "nodriver>=0.50.3",
+    "bandit>=1.9.4",
 ]
+
+[build-system]
+requires = ["uv_build>=0.12,<0.13"]
+build-backend = "uv_build"
+
+[tool.basedpyright]
+include = ["src","scripts"]
+typeCheckingMode = "standard"
+stubPath = "typings"
+exclude = ["**/node_modules", "**/__pycache__", "**/.*", ".venv", "typings"]
+
+[tool.ruff]
+exclude = ["typings"]

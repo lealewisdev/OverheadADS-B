@@ -1,0 +1,268 @@
+---
+name: Build, Scan, Push Image
+"on":
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'packaging/**'
+      - 'pyproject.toml'
+      - '.dockerignore'
+      - '.python-version'
+      - 'Dockerfile'
+      - 'uv.lock'
+      - '.forgejo/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  REGISTRY: ${{ vars.REGISTRY }}
+  IMAGE: ${{ vars.REGISTRY }}/${{ github.repository }}
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  test:
+    runs-on: docker
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        # v7.0.1
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Log In To dhi.io
+        env:
+          DHI_USER: ${{ secrets.DHI_USER }}
+          DHI_TOKEN: ${{ secrets.DHI_TOKEN }}
+        run: |
+          printf '%s' "$DHI_TOKEN" | docker login dhi.io \
+            -u "$DHI_USER" --password-stdin
+
+      - name: Lint, Type Check & Test
+        run: |
+          docker buildx inspect forgejo-builder >/dev/null 2>&1 || \
+            docker buildx create --name forgejo-builder --use
+          docker buildx build --target test .
+
+      - name: Log Out Of dhi.io
+        if: always()
+        run: docker logout dhi.io
+
+  build:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: docker
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        # v7.0.1
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Set Image Tags
+        id: vars
+        run: |
+          sha="$(git rev-parse --short HEAD)"
+          semver="$(grep -m1 -E '^version\s*=' pyproject.toml \
+            | sed -E 's/version[[:space:]]*=[[:space:]]*"([^"]+)"/\1/')"
+          if [ -z "$semver" ]; then
+            echo "::error::Could not parse version from pyproject.toml"
+            exit 1
+          fi
+          echo "sha=${sha}" >> "$GITHUB_OUTPUT"
+          echo "semver=v${semver}" >> "$GITHUB_OUTPUT"
+
+      - name: Log In To Registry
+        env:
+          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          printf '%s' "$REGISTRY_TOKEN" | docker login "$REGISTRY" \
+            -u "$REGISTRY_USER" --password-stdin
+
+      - name: Log In To dhi.io
+        env:
+          DHI_USER: ${{ secrets.DHI_USER }}
+          DHI_TOKEN: ${{ secrets.DHI_TOKEN }}
+        run: |
+          printf '%s' "$DHI_TOKEN" | docker login dhi.io \
+            -u "$DHI_USER" --password-stdin
+
+      - name: Build Image
+        id: build
+        env:
+          SHA: ${{ steps.vars.outputs.sha }}
+          SEMVER: ${{ steps.vars.outputs.semver }}
+        run: |
+          docker buildx inspect forgejo-builder >/dev/null 2>&1 || \
+            docker buildx create --name forgejo-builder --use
+          docker buildx build \
+            --pull \
+            --platform linux/amd64 \
+            --target runtime \
+            --cache-from "type=registry,ref=${IMAGE}:buildcache" \
+            --cache-to "type=registry,ref=${IMAGE}:buildcache,mode=max" \
+            --metadata-file metadata.json \
+            -t "${IMAGE}:${SHA}" \
+            -t "${IMAGE}:${SEMVER}" \
+            -t "${IMAGE}:latest" \
+            --load \
+            .
+          DIGEST=$(jq -r '."containerimage.digest" // empty' metadata.json)
+          if [ -z "$DIGEST" ]; then
+            echo "Could not determine built image digest from metadata" >&2
+            exit 1
+          fi
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
+
+      - name: Log Out Of dhi.io
+        if: always()
+        run: docker logout dhi.io
+
+      - name: Get Trivy DB Cache Key Date
+        id: trivy-date
+        run: echo "date=$(date -u +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Trivy DB
+        # v6.1.0
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ~/.cache/trivy
+          key: trivy-db-${{ runner.os }}-${{ steps.trivy-date.outputs.date }}
+          restore-keys: |
+            trivy-db-${{ runner.os }}-
+
+      - name: Generate SBOM
+        env:
+          SHA: ${{ steps.vars.outputs.sha }}
+        run: |
+          trivy image \
+            --cache-dir ~/.cache/trivy \
+            --format cyclonedx \
+            --output sbom.cdx.json \
+            "${IMAGE}:${SHA}"
+
+      - name: Scan Image
+        run: |
+          trivy sbom \
+            --cache-dir ~/.cache/trivy \
+            --exit-code 1 \
+            --ignore-unfixed \
+            --severity CRITICAL,HIGH \
+            --ignorefile packaging/.trivyignore \
+            sbom.cdx.json
+
+      - name: Push Image
+        id: push
+        env:
+          SHA: ${{ steps.vars.outputs.sha }}
+          SEMVER: ${{ steps.vars.outputs.semver }}
+        run: |
+          docker push "${IMAGE}:${SHA}"
+          docker push "${IMAGE}:${SEMVER}"
+          docker push "${IMAGE}:latest"
+          FORMAT='{{range .RepoDigests}}{{println .}}{{end}}'
+          DIGEST=$(docker inspect --format="$FORMAT" "${IMAGE}:${SHA}" \
+            | grep -F "${IMAGE}@" | head -n1 | cut -d'@' -f2)
+          if [ -z "$DIGEST" ]; then
+            echo "Could not resolve pushed digest for ${IMAGE}" >&2
+            exit 1
+          fi
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
+
+      - name: Sign And Attest Image
+        env:
+          COSIGN_KEY: ${{ secrets.COSIGN_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          PUSHED_DIGEST: ${{ steps.push.outputs.digest }}
+        run: |
+          IMAGE_REF="${IMAGE}@${PUSHED_DIGEST}"
+          cosign sign --key env://COSIGN_KEY --yes "$IMAGE_REF"
+          cosign attest --key env://COSIGN_KEY --yes \
+            --predicate sbom.cdx.json \
+            --type cyclonedx \
+            "$IMAGE_REF"
+
+      - name: Log Out Of Registry
+        if: always()
+        run: docker logout "$REGISTRY"
+
+      - name: Trigger Deployment
+        if: success()
+        env:
+          N8N_DEPLOY_WEBHOOK_URL: ${{ secrets.N8N_DEPLOY_WEBHOOK_URL }}
+          N8N_WEBHOOK_TOKEN: ${{ secrets.N8N_WEBHOOK_TOKEN }}
+          SEMAPHORE_URL: ${{ secrets.SEMAPHORE_URL }}
+          SEMAPHORE_PROJECT_ID: ${{ vars.SEMAPHORE_PROJECT_ID }}
+          SEMAPHORE_DEPLOY_TEMPLATE_ID: ${{ vars.SEMAPHORE_DEPLOY_TEMPLATE_ID }}
+          SEMAPHORE_ROLLBACK_TMPL_ID: ${{ vars.SEMAPHORE_ROLLBACK_TEMPLATE_ID }}
+          APPRISE_URL: ${{ secrets.APPRISE_URL }}
+          REPOSITORY: ${{ github.repository }}
+          WORKFLOW: ${{ github.workflow }}
+          EVENT_NAME: ${{ github.event_name }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}
+            /actions/runs/${{ github.run_id }}
+          IMAGE_SHA: ${{ steps.vars.outputs.sha }}
+          SEMVER: ${{ steps.vars.outputs.semver }}
+        run: |
+          set -eo pipefail
+          curl \
+            --fail-with-body \
+            --show-error \
+            --silent \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "X-Webhook-Token: ${N8N_WEBHOOK_TOKEN}" \
+            -d "{
+              \"repository\":\"${REPOSITORY}\",\"triggered_by\":\"${EVENT_NAME}\",
+              \"workflow\":\"${WORKFLOW}\",\"run_url\":\"${RUN_URL}\",
+              \"status\":\"success\",\"image_tag\":\"${IMAGE_SHA}\",
+              \"semver\":\"${SEMVER}\",\"semaphore_url\":\"${SEMAPHORE_URL}\",\"semaphore_project_id\":${SEMAPHORE_PROJECT_ID},
+              \"semaphore_deploy_template_id\":${SEMAPHORE_DEPLOY_TEMPLATE_ID},\"semaphore_rollback_template_id\":${SEMAPHORE_ROLLBACK_TMPL_ID},
+              \"apprise_url\":\"${APPRISE_URL}\"
+            }" \
+            "$N8N_DEPLOY_WEBHOOK_URL"
+
+  notify:
+    needs: [test, build]
+    if: '!cancelled()'
+    runs-on: docker
+    timeout-minutes: 5
+    steps:
+      - name: Notify n8n
+        continue-on-error: true
+        env:
+          N8N_WEBHOOK_URL: ${{ secrets.N8N_WEBHOOK_URL }}
+          N8N_WEBHOOK_TOKEN: ${{ secrets.N8N_WEBHOOK_TOKEN }}
+          APPRISE_URL: ${{ secrets.APPRISE_URL }}
+          REPOSITORY: ${{ github.repository }}
+          WORKFLOW: ${{ github.workflow }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}
+            /actions/runs/${{ github.run_id }}
+          TEST_RESULT: ${{ needs.test.result }}
+          BUILD_RESULT: ${{ needs.build.result }}
+        run: |
+          set -eo pipefail
+          STATUS=success
+          for result in "$TEST_RESULT" "$BUILD_RESULT"; do
+            case "$result" in
+              success|skipped) ;;
+              *) STATUS=failure ;;
+            esac
+          done
+          curl \
+            --fail-with-body \
+            --show-error \
+            --silent \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "X-Webhook-Token: ${N8N_WEBHOOK_TOKEN}" \
+            -d "{
+              \"repository\":\"${REPOSITORY}\",\"workflow\":\"${WORKFLOW}\",
+              \"status\":\"${STATUS}\",\"run_url\":\"${RUN_URL}\",
+              \"apprise_url\":\"${APPRISE_URL}\"
+            }" \
+            "$N8N_WEBHOOK_URL"

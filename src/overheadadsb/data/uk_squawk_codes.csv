@@ -1,0 +1,2743 @@
+squawk,function
+0000,SSR UNRELIABLE
+0001,MONITORING Height
+0002,INSPECTION Ground Transponder
+0003,HEMS Surrey / Sussex
+0004,NON-STANDARD Scotland
+0005,NON-STANDARD Scotland
+0006,POLICE Transport
+0007,ATC CONSPICUITY Off-shore Safety Area
+0010,CAS Birmingham
+0011,CAS Glasgow
+0012,ATC London
+0013,ATC Luton
+0014,HEMS Kent
+0015,HEMS Essex
+0016,HEMS Thames Valley
+0017,HEMS London
+0020,HEMS
+0021,SERVICING SHIP Fixed-Wing
+0022,SERVICING SHIP Helicopter
+0023,SAR
+0024,CALIBRATION Radar
+0025,NON-STANDARD Scotland
+0026,SPECIAL
+0027,CAS London
+0030,FIR LOST
+0031,HEMS Hertfordshire
+0032,POLICE
+0033,RAF Paradropping
+0034,TOWING Target/Glider
+0035,SELECTED
+0036,INSPECTION Pipeline/Powerline
+0037,ROYAL
+0040,ATC North Sea
+0041,POLICE
+0042,POLICE
+0043,POLICE
+0044,POLICE
+0045,POLICE
+0046,POLICE
+0047,POLICE
+0048,POLICE
+0049,POLICE
+0050,POLICE
+0051,POLICE
+0052,POLICE
+0053,POLICE
+0054,POLICE
+0055,POLICE
+0056,POLICE
+0057,POLICE
+0058,POLICE
+0059,POLICE
+0060,POLICE
+0061,POLICE
+0062,RAF 1 ACC
+0063,RAF 1 ACC
+0064,RAF 1 ACC
+0065,RAF 1 ACC
+0066,RAF 1 ACC
+0067,RAF 1 ACC
+0068,RAF 1 ACC
+0069,RAF 1 ACC
+0070,RAF 1 ACC
+0071,RAF 1 ACC
+0072,RAF 1 ACC
+0073,RAF 1 ACC
+0074,RAF 1 ACC
+0075,RAF 1 ACC
+0076,RAF 1 ACC
+0077,RAF 1 ACC
+0100,RAF Air Command HQ
+0101,ORIGIN Brussels
+0102,ORIGIN Brussels
+0103,ORIGIN Brussels
+0104,ORIGIN Brussels
+0105,ORIGIN Brussels
+0106,ORIGIN Brussels
+0107,ORIGIN Brussels
+0108,ORIGIN Brussels
+0109,ORIGIN Brussels
+0110,ORIGIN Brussels
+0111,ORIGIN Brussels
+0112,ORIGIN Brussels
+0113,ORIGIN Brussels
+0114,ORIGIN Brussels
+0115,ORIGIN Brussels
+0116,ORIGIN Brussels
+0117,ORIGIN Brussels
+0120,ORIGIN Germany
+0121,ORIGIN Germany
+0122,ORIGIN Germany
+0123,ORIGIN Germany
+0124,ORIGIN Germany
+0125,ORIGIN Germany
+0126,ORIGIN Germany
+0127,ORIGIN Germany
+0128,ORIGIN Germany
+0129,ORIGIN Germany
+0130,ORIGIN Germany
+0131,ORIGIN Germany
+0132,ORIGIN Germany
+0133,ORIGIN Germany
+0134,ORIGIN Germany
+0135,ORIGIN Germany
+0136,ORIGIN Germany
+0137,ORIGIN Germany
+0140,ORIGIN Amsterdam
+0141,ORIGIN Amsterdam
+0142,ORIGIN Amsterdam
+0143,ORIGIN Amsterdam
+0144,ORIGIN Amsterdam
+0145,ORIGIN Amsterdam
+0146,ORIGIN Amsterdam
+0147,ORIGIN Amsterdam
+0148,ORIGIN Amsterdam
+0149,ORIGIN Amsterdam
+0150,ORIGIN Amsterdam
+0151,ORIGIN Amsterdam
+0152,ORIGIN Amsterdam
+0153,ORIGIN Amsterdam
+0154,ORIGIN Amsterdam
+0155,ORIGIN Amsterdam
+0156,ORIGIN Amsterdam
+0157,ORIGIN Amsterdam
+0158,ORIGIN Amsterdam
+0159,ORIGIN Amsterdam
+0160,ORIGIN Amsterdam
+0161,ORIGIN Amsterdam
+0162,ORIGIN Amsterdam
+0163,ORIGIN Amsterdam
+0164,ORIGIN Amsterdam
+0165,ORIGIN Amsterdam
+0166,ORIGIN Amsterdam
+0167,ORIGIN Amsterdam
+0168,ORIGIN Amsterdam
+0169,ORIGIN Amsterdam
+0170,ORIGIN Amsterdam
+0171,ORIGIN Amsterdam
+0172,ORIGIN Amsterdam
+0173,ORIGIN Amsterdam
+0174,ORIGIN Amsterdam
+0175,ORIGIN Amsterdam
+0176,ORIGIN Amsterdam
+0177,ORIGIN Amsterdam
+0200,RAF Air Command HQ
+0300,RAF Air Command HQ
+0400,RAF Air Command HQ
+0401,RAF CONSPICUITY Leeming
+0401,ATC Birmingham
+0402,ATC Birmingham
+0403,ATC Birmingham
+0404,ATC Birmingham
+0405,ATC Birmingham
+0406,ATC Birmingham
+0407,ATC Birmingham
+0408,ATC Birmingham
+0409,ATC Birmingham
+0410,ATC Birmingham
+0411,ATC Birmingham
+0412,ATC Birmingham
+0413,ATC Birmingham
+0414,ATC Birmingham
+0415,ATC Birmingham
+0416,ATC Birmingham
+0417,ATC Birmingham
+0401,ATC Ireland
+0402,ATC Ireland
+0403,ATC Ireland
+0404,ATC Ireland
+0405,ATC Ireland
+0406,ATC Ireland
+0407,ATC Ireland
+0408,ATC Ireland
+0409,ATC Ireland
+0410,ATC Ireland
+0411,ATC Ireland
+0412,ATC Ireland
+0413,ATC Ireland
+0414,ATC Ireland
+0415,ATC Ireland
+0416,ATC Ireland
+0417,ATC Ireland
+0418,ATC Ireland
+0419,ATC Ireland
+0420,ATC Ireland
+0421,ATC Ireland
+0422,ATC Ireland
+0423,ATC Ireland
+0424,ATC Ireland
+0425,ATC Ireland
+0426,ATC Ireland
+0427,ATC Ireland
+0428,ATC Ireland
+0429,ATC Ireland
+0430,ATC Ireland
+0431,ATC Ireland
+0432,ATC Ireland
+0433,ATC Ireland
+0434,ATC Ireland
+0435,ATC Ireland
+0436,ATC Ireland
+0437,ATC Ireland
+0401,ATC Exeter
+0402,ATC Exeter
+0403,ATC Exeter
+0404,ATC Exeter
+0405,ATC Exeter
+0406,ATC Exeter
+0407,ATC Exeter
+0408,ATC Exeter
+0409,ATC Exeter
+0410,ATC Exeter
+0411,ATC Exeter
+0412,ATC Exeter
+0413,ATC Exeter
+0414,ATC Exeter
+0415,ATC Exeter
+0416,ATC Exeter
+0417,ATC Exeter
+0418,ATC Exeter
+0419,ATC Exeter
+0420,ATC Exeter
+0421,ATC Exeter
+0422,ATC Exeter
+0423,ATC Exeter
+0424,ATC Exeter
+0425,ATC Exeter
+0426,ATC Exeter
+0427,ATC Exeter
+0428,ATC Exeter
+0429,ATC Exeter
+0430,ATC Exeter
+0431,ATC Exeter
+0432,ATC Exeter
+0433,ATC Exeter
+0434,ATC Exeter
+0435,ATC Exeter
+0436,ATC Exeter
+0437,ATC Exeter
+0438,ATC Exeter
+0439,ATC Exeter
+0440,ATC Exeter
+0441,ATC Exeter
+0442,ATC Exeter
+0443,ATC Exeter
+0444,ATC Exeter
+0445,ATC Exeter
+0446,ATC Exeter
+0447,ATC Exeter
+0448,ATC Exeter
+0449,ATC Exeter
+0450,ATC Exeter
+0401,RAF Lakenheath
+0402,RAF Lakenheath
+0403,RAF Lakenheath
+0404,RAF Lakenheath
+0405,RAF Lakenheath
+0406,RAF Lakenheath
+0407,RAF Lakenheath
+0408,RAF Lakenheath
+0409,RAF Lakenheath
+0410,RAF Lakenheath
+0411,RAF Lakenheath
+0412,RAF Lakenheath
+0413,RAF Lakenheath
+0414,RAF Lakenheath
+0415,RAF Lakenheath
+0416,RAF Lakenheath
+0417,RAF Lakenheath
+0418,RAF Lakenheath
+0419,RAF Lakenheath
+0420,RAF Lakenheath
+0421,RAF Lakenheath
+0422,RAF Lakenheath
+0423,RAF Lakenheath
+0424,RAF Lakenheath
+0425,RAF Lakenheath
+0426,RAF Lakenheath
+0427,RAF Lakenheath
+0428,RAF Lakenheath
+0429,RAF Lakenheath
+0430,RAF Lakenheath
+0431,RAF Lakenheath
+0432,RAF Lakenheath
+0433,RAF Lakenheath
+0434,RAF Lakenheath
+0435,RAF Lakenheath
+0436,RAF Lakenheath
+0437,RAF Lakenheath
+0438,RAF Lakenheath
+0439,RAF Lakenheath
+0440,RAF Lakenheath
+0441,RAF Lakenheath
+0442,RAF Lakenheath
+0443,RAF Lakenheath
+0444,RAF Lakenheath
+0445,RAF Lakenheath
+0446,RAF Lakenheath
+0447,RAF Lakenheath
+0448,RAF Lakenheath
+0449,RAF Lakenheath
+0450,RAF Lakenheath
+0451,RAF Lakenheath
+0452,RAF Lakenheath
+0453,RAF Lakenheath
+0454,RAF Lakenheath
+0455,RAF Lakenheath
+0456,RAF Lakenheath
+0457,RAF Lakenheath
+0458,RAF Lakenheath
+0459,RAF Lakenheath
+0460,RAF Lakenheath
+0461,RAF Lakenheath
+0402,RAF Leeming
+0403,RAF Leeming
+0404,RAF Leeming
+0405,RAF Leeming
+0406,RAF Leeming
+0407,RAF Leeming
+0408,RAF Leeming
+0409,RAF Leeming
+0410,RAF Leeming
+0411,RAF Leeming
+0412,RAF Leeming
+0413,RAF Leeming
+0414,RAF Leeming
+0415,RAF Leeming
+0416,RAF Leeming
+0417,RAF Leeming
+0418,RAF Leeming
+0419,RAF Leeming
+0420,RAF Leeming
+0421,RAF Leeming
+0422,RAF Leeming
+0423,RAF Leeming
+0424,RAF Leeming
+0425,RAF Leeming
+0426,RAF Leeming
+0427,RAF Leeming
+0428,RAF Leeming
+0429,RAF Leeming
+0430,RAF Leeming
+0431,RAF Leeming
+0432,RAF Leeming
+0433,RAF Leeming
+0434,RAF Leeming
+0435,RAF Leeming
+0436,RAF Leeming
+0437,RAF Leeming
+0420,ATC CONSPICUITY Coventry
+0421,ATC IFR/SVFR Farnborough
+0422,ATC IFR/SVFR Farnborough
+0423,ATC IFR/SVFR Farnborough
+0424,ATC IFR/SVFR Farnborough
+0425,ATC IFR/SVFR Farnborough
+0426,ATC IFR/SVFR Farnborough
+0427,ATC IFR/SVFR Farnborough
+0430,ATC CONSPICUITY Hawarden
+0430,ATC Edinburgh
+0431,ATC Edinburgh
+0432,ATC Edinburgh
+0433,ATC Edinburgh
+0434,ATC Edinburgh
+0435,ATC Edinburgh
+0436,ATC Edinburgh
+0437,ATC Edinburgh
+0430,CAS Farnborough
+0431,CAS Farnborough
+0432,CAS Farnborough
+0433,CAS Farnborough
+0434,CAS Farnborough
+0435,CAS Farnborough
+0436,CAS Farnborough
+0437,CAS Farnborough
+0438,CAS Farnborough
+0439,CAS Farnborough
+0440,CAS Farnborough
+0441,CAS Farnborough
+0442,CAS Farnborough
+0443,CAS Farnborough
+0444,CAS Farnborough
+0445,CAS Farnborough
+0446,CAS Farnborough
+0447,CAS Farnborough
+0448,CAS Farnborough
+0449,CAS Farnborough
+0450,CAS Farnborough
+0451,CAS Farnborough
+0452,CAS Farnborough
+0453,CAS Farnborough
+0454,CAS Farnborough
+0455,CAS Farnborough
+0456,CAS Farnborough
+0431,ATC Hawarden
+0432,ATC Hawarden
+0433,ATC Hawarden
+0434,ATC Hawarden
+0435,ATC Hawarden
+0436,ATC Hawarden
+0437,ATC Hawarden
+0438,ATC Hawarden
+0439,ATC Hawarden
+0440,ATC Hawarden
+0441,ATC Hawarden
+0442,ATC Hawarden
+0443,ATC Hawarden
+0444,ATC Hawarden
+0445,ATC Hawarden
+0446,ATC Hawarden
+0440,CAS Edinburgh
+0441,ATC Edinburgh
+0442,ATC Edinburgh
+0443,ATC Edinburgh
+0450,ATC CONSPICUITY BASIC Blackpool
+0451,ATC CONSPICUITY PROCEDURAL Blackpool
+0452,ATC CONSPICUITY Morecambe Bay
+0453,ATC CONSPICUITY Liverpool Bay
+0455,ATC Ekofisk RMZ
+0457,CAS VFR CONSPICUITY Farnborough
+0460,ATC VFR Farnborough
+0461,ATC VFR Farnborough
+0462,ATC VFR Farnborough
+0463,ATC VFR Farnborough
+0464,ATC VFR Farnborough
+0465,ATC VFR Farnborough
+0466,ATC VFR Farnborough
+0467,ATC VFR Farnborough
+0462,USAFE
+0463,USAFE
+0464,USAFE
+0465,USAFE
+0466,USAFE
+0467,USAFE
+0500,RAF Air Command HQ
+0600,RAF Air Command HQ
+0601,ORIGIN Germany
+0602,ORIGIN Germany
+0603,ORIGIN Germany
+0604,ORIGIN Germany
+0605,ORIGIN Germany
+0606,ORIGIN Germany
+0607,ORIGIN Germany
+0608,ORIGIN Germany
+0609,ORIGIN Germany
+0610,ORIGIN Germany
+0611,ORIGIN Germany
+0612,ORIGIN Germany
+0613,ORIGIN Germany
+0614,ORIGIN Germany
+0615,ORIGIN Germany
+0616,ORIGIN Germany
+0617,ORIGIN Germany
+0618,ORIGIN Germany
+0619,ORIGIN Germany
+0620,ORIGIN Germany
+0621,ORIGIN Germany
+0622,ORIGIN Germany
+0623,ORIGIN Germany
+0624,ORIGIN Germany
+0625,ORIGIN Germany
+0626,ORIGIN Germany
+0627,ORIGIN Germany
+0628,ORIGIN Germany
+0629,ORIGIN Germany
+0630,ORIGIN Germany
+0631,ORIGIN Germany
+0632,ORIGIN Germany
+0633,ORIGIN Germany
+0634,ORIGIN Germany
+0635,ORIGIN Germany
+0636,ORIGIN Germany
+0637,ORIGIN Germany
+0640,ORIGIN Paris
+0641,ORIGIN Paris
+0642,ORIGIN Paris
+0643,ORIGIN Paris
+0644,ORIGIN Paris
+0645,ORIGIN Paris
+0646,ORIGIN Paris
+0647,ORIGIN Paris
+0648,ORIGIN Paris
+0649,ORIGIN Paris
+0650,ORIGIN Paris
+0651,ORIGIN Paris
+0652,ORIGIN Paris
+0653,ORIGIN Paris
+0654,ORIGIN Paris
+0655,ORIGIN Paris
+0656,ORIGIN Paris
+0657,ORIGIN Paris
+0658,ORIGIN Paris
+0659,ORIGIN Paris
+0660,ORIGIN Paris
+0661,ORIGIN Paris
+0662,ORIGIN Paris
+0663,ORIGIN Paris
+0664,ORIGIN Paris
+0665,ORIGIN Paris
+0666,ORIGIN Paris
+0667,ORIGIN Paris
+0668,ORIGIN Paris
+0669,ORIGIN Paris
+0670,ORIGIN Paris
+0671,ORIGIN Paris
+0672,ORIGIN Paris
+0673,ORIGIN Paris
+0674,ORIGIN Paris
+0675,ORIGIN Paris
+0676,ORIGIN Paris
+0677,ORIGIN Paris
+0700,RAF Air Command HQ
+0701,ORIGIN Maastricht
+0702,ORIGIN Maastricht
+0703,ORIGIN Maastricht
+0704,ORIGIN Maastricht
+0705,ORIGIN Maastricht
+0706,ORIGIN Maastricht
+0707,ORIGIN Maastricht
+0708,ORIGIN Maastricht
+0709,ORIGIN Maastricht
+0710,ORIGIN Maastricht
+0711,ORIGIN Maastricht
+0712,ORIGIN Maastricht
+0713,ORIGIN Maastricht
+0714,ORIGIN Maastricht
+0715,ORIGIN Maastricht
+0716,ORIGIN Maastricht
+0717,ORIGIN Maastricht
+0718,ORIGIN Maastricht
+0719,ORIGIN Maastricht
+0720,ORIGIN Maastricht
+0721,ORIGIN Maastricht
+0722,ORIGIN Maastricht
+0723,ORIGIN Maastricht
+0724,ORIGIN Maastricht
+0725,ORIGIN Maastricht
+0726,ORIGIN Maastricht
+0727,ORIGIN Maastricht
+0770,ORIGIN Maastricht
+0771,ORIGIN Maastricht
+0772,ORIGIN Maastricht
+0773,ORIGIN Maastricht
+0774,ORIGIN Maastricht
+0775,ORIGIN Maastricht
+0776,ORIGIN Maastricht
+0777,ORIGIN Maastricht
+1000,MODE S ID
+1001,ORIGIN Spain
+1002,ORIGIN Spain
+1003,ORIGIN Spain
+1004,ORIGIN Spain
+1005,ORIGIN Spain
+1006,ORIGIN Spain
+1007,ORIGIN Spain
+1008,ORIGIN Spain
+1009,ORIGIN Spain
+1010,ORIGIN Spain
+1011,ORIGIN Spain
+1012,ORIGIN Spain
+1013,ORIGIN Spain
+1014,ORIGIN Spain
+1015,ORIGIN Spain
+1016,ORIGIN Spain
+1017,ORIGIN Spain
+1018,ORIGIN Spain
+1019,ORIGIN Spain
+1020,ORIGIN Spain
+1021,ORIGIN Spain
+1022,ORIGIN Spain
+1023,ORIGIN Spain
+1024,ORIGIN Spain
+1025,ORIGIN Spain
+1026,ORIGIN Spain
+1027,ORIGIN Spain
+1028,ORIGIN Spain
+1029,ORIGIN Spain
+1030,ORIGIN Spain
+1031,ORIGIN Spain
+1032,ORIGIN Spain
+1033,ORIGIN Spain
+1034,ORIGIN Spain
+1035,ORIGIN Spain
+1036,ORIGIN Spain
+1037,ORIGIN Spain
+1038,ORIGIN Spain
+1039,ORIGIN Spain
+1040,ORIGIN Spain
+1041,ORIGIN Spain
+1042,ORIGIN Spain
+1043,ORIGIN Spain
+1044,ORIGIN Spain
+1045,ORIGIN Spain
+1046,ORIGIN Spain
+1047,ORIGIN Spain
+1048,ORIGIN Spain
+1049,ORIGIN Spain
+1050,ORIGIN Spain
+1051,ORIGIN Spain
+1052,ORIGIN Spain
+1053,ORIGIN Spain
+1054,ORIGIN Spain
+1055,ORIGIN Spain
+1056,ORIGIN Spain
+1057,ORIGIN Spain
+1058,ORIGIN Spain
+1059,ORIGIN Spain
+1060,ORIGIN Spain
+1061,ORIGIN Spain
+1062,ORIGIN Spain
+1063,ORIGIN Spain
+1064,ORIGIN Spain
+1065,ORIGIN Spain
+1066,ORIGIN Spain
+1067,ORIGIN Spain
+1100,RAF Air Command HQ
+1101,ORIGIN Germany
+1102,ORIGIN Germany
+1103,ORIGIN Germany
+1104,ORIGIN Germany
+1105,ORIGIN Germany
+1106,ORIGIN Germany
+1107,ORIGIN Germany
+1108,ORIGIN Germany
+1109,ORIGIN Germany
+1110,ORIGIN Germany
+1111,ORIGIN Germany
+1112,ORIGIN Germany
+1113,ORIGIN Germany
+1114,ORIGIN Germany
+1115,ORIGIN Germany
+1116,ORIGIN Germany
+1117,ORIGIN Germany
+1118,ORIGIN Germany
+1119,ORIGIN Germany
+1120,ORIGIN Germany
+1121,ORIGIN Germany
+1122,ORIGIN Germany
+1123,ORIGIN Germany
+1124,ORIGIN Germany
+1125,ORIGIN Germany
+1126,ORIGIN Germany
+1127,ORIGIN Germany
+1128,ORIGIN Germany
+1129,ORIGIN Germany
+1130,ORIGIN Germany
+1131,ORIGIN Germany
+1132,ORIGIN Germany
+1133,ORIGIN Germany
+1134,ORIGIN Germany
+1135,ORIGIN Germany
+1136,ORIGIN Germany
+1137,ORIGIN Germany
+1177,ATC Swanwick
+1200,RAF Air Command HQ
+1201,ATC Channel Islands
+1202,ATC Channel Islands
+1203,ATC Channel Islands
+1204,ATC Channel Islands
+1205,ATC Channel Islands
+1206,ATC Channel Islands
+1207,ATC Channel Islands
+1208,ATC Channel Islands
+1209,ATC Channel Islands
+1210,ATC Channel Islands
+1211,ATC Channel Islands
+1212,ATC Channel Islands
+1213,ATC Channel Islands
+1214,ATC Channel Islands
+1215,ATC Channel Islands
+1216,ATC Channel Islands
+1217,ATC Channel Islands
+1218,ATC Channel Islands
+1219,ATC Channel Islands
+1220,ATC Channel Islands
+1221,ATC Channel Islands
+1222,ATC Channel Islands
+1223,ATC Channel Islands
+1224,ATC Channel Islands
+1225,ATC Channel Islands
+1226,ATC Channel Islands
+1227,ATC Channel Islands
+1228,ATC Channel Islands
+1229,ATC Channel Islands
+1230,ATC Channel Islands
+1231,ATC Channel Islands
+1232,ATC Channel Islands
+1233,ATC Channel Islands
+1234,ATC Channel Islands
+1235,ATC Channel Islands
+1236,ATC Channel Islands
+1237,ATC Channel Islands
+1238,ATC Channel Islands
+1239,ATC Channel Islands
+1240,ATC Channel Islands
+1241,ATC Channel Islands
+1242,ATC Channel Islands
+1243,ATC Channel Islands
+1244,ATC Channel Islands
+1245,ATC Channel Islands
+1246,ATC Channel Islands
+1247,ATC Channel Islands
+1260,RNAS Queen Elizabeth
+1261,RNAS Queen Elizabeth
+1262,RNAS Queen Elizabeth
+1263,RNAS Queen Elizabeth
+1264,RNAS Queen Elizabeth
+1265,RNAS Queen Elizabeth
+1266,RNAS Queen Elizabeth
+1267,RNAS Queen Elizabeth
+1268,RNAS Queen Elizabeth
+1269,RNAS Queen Elizabeth
+1270,RNAS Queen Elizabeth
+1271,RNAS Queen Elizabeth
+1272,RNAS Queen Elizabeth
+1273,RNAS Queen Elizabeth
+1274,RNAS Queen Elizabeth
+1275,RNAS Queen Elizabeth
+1276,RNAS Queen Elizabeth
+1277,RNAS Queen Elizabeth
+1300,RAF Air Command HQ
+1301,CAA
+1302,CAA
+1303,CAA
+1304,CAA
+1305,CAA
+1306,CAA
+1307,NATO
+1308,NATO
+1309,NATO
+1310,NATO
+1311,NATO
+1312,NATO
+1313,NATO
+1314,NATO
+1315,NATO
+1316,NATO
+1317,NATO
+1318,NATO
+1319,NATO
+1320,NATO
+1321,NATO
+1322,NATO
+1323,NATO
+1324,NATO
+1325,NATO
+1326,NATO
+1327,NATO
+1330,ORIGIN Germany
+1331,ORIGIN Germany
+1332,ORIGIN Germany
+1333,ORIGIN Germany
+1334,ORIGIN Germany
+1335,ORIGIN Germany
+1336,ORIGIN Germany
+1337,ORIGIN Germany
+1338,ORIGIN Germany
+1339,ORIGIN Germany
+1340,ORIGIN Germany
+1341,ORIGIN Germany
+1342,ORIGIN Germany
+1343,ORIGIN Germany
+1344,ORIGIN Germany
+1345,ORIGIN Germany
+1346,ORIGIN Germany
+1347,ORIGIN Germany
+1348,ORIGIN Germany
+1349,ORIGIN Germany
+1350,ORIGIN Germany
+1351,ORIGIN Germany
+1352,ORIGIN Germany
+1353,ORIGIN Germany
+1354,ORIGIN Germany
+1355,ORIGIN Germany
+1356,ORIGIN Germany
+1357,ORIGIN Germany
+1358,ORIGIN Germany
+1359,ORIGIN Germany
+1360,ORIGIN Germany
+1361,ORIGIN Germany
+1362,ORIGIN Germany
+1363,ORIGIN Germany
+1364,ORIGIN Germany
+1365,ORIGIN Germany
+1366,ORIGIN Germany
+1367,ORIGIN Germany
+1368,ORIGIN Germany
+1369,ORIGIN Germany
+1370,ORIGIN Germany
+1371,ORIGIN Germany
+1372,ORIGIN Germany
+1373,ORIGIN Germany
+1374,ORIGIN Germany
+1375,ORIGIN Germany
+1376,ORIGIN Germany
+1377,ORIGIN Germany
+1400,RAF Air Command HQ
+1401,ATC Ireland
+1402,ATC Ireland
+1403,ATC Ireland
+1404,ATC Ireland
+1405,ATC Ireland
+1406,ATC Ireland
+1407,ATC Ireland
+1500,RAF Air Command HQ
+1501,RAF Battlespace Management HQ
+1502,RAF Battlespace Management HQ
+1503,RAF Battlespace Management HQ
+1504,RAF Battlespace Management HQ
+1505,RAF Battlespace Management HQ
+1506,RAF Battlespace Management HQ
+1507,RAF Battlespace Management HQ
+1508,RAF Battlespace Management HQ
+1509,RAF Battlespace Management HQ
+1510,RAF Battlespace Management HQ
+1511,RAF Battlespace Management HQ
+1512,RAF Battlespace Management HQ
+1513,RAF Battlespace Management HQ
+1514,RAF Battlespace Management HQ
+1515,RAF Battlespace Management HQ
+1516,RAF Battlespace Management HQ
+1517,RAF Battlespace Management HQ
+1518,RAF Battlespace Management HQ
+1519,RAF Battlespace Management HQ
+1520,RAF Battlespace Management HQ
+1521,RAF Battlespace Management HQ
+1522,RAF Battlespace Management HQ
+1523,RAF Battlespace Management HQ
+1524,RAF Battlespace Management HQ
+1525,RAF Battlespace Management HQ
+1526,RAF Battlespace Management HQ
+1527,RAF Battlespace Management HQ
+1528,RAF Battlespace Management HQ
+1529,RAF Battlespace Management HQ
+1530,RAF Battlespace Management HQ
+1531,RAF Battlespace Management HQ
+1532,RAF Battlespace Management HQ
+1533,RAF Battlespace Management HQ
+1534,RAF Battlespace Management HQ
+1535,RAF Battlespace Management HQ
+1536,RAF Battlespace Management HQ
+1537,RAF Battlespace Management HQ
+1538,RAF Battlespace Management HQ
+1539,RAF Battlespace Management HQ
+1540,RAF Battlespace Management HQ
+1541,RAF Battlespace Management HQ
+1542,RAF Battlespace Management HQ
+1543,RAF Battlespace Management HQ
+1544,RAF Battlespace Management HQ
+1545,RAF Battlespace Management HQ
+1546,RAF Battlespace Management HQ
+1547,RAF Battlespace Management HQ
+1548,RAF Battlespace Management HQ
+1549,RAF Battlespace Management HQ
+1550,RAF Battlespace Management HQ
+1551,RAF Battlespace Management HQ
+1552,RAF Battlespace Management HQ
+1553,RAF Battlespace Management HQ
+1554,RAF Battlespace Management HQ
+1555,RAF Battlespace Management HQ
+1556,RAF Battlespace Management HQ
+1557,RAF Battlespace Management HQ
+1558,RAF Battlespace Management HQ
+1559,RAF Battlespace Management HQ
+1560,RAF Battlespace Management HQ
+1561,RAF Battlespace Management HQ
+1562,RAF Battlespace Management HQ
+1563,RAF Battlespace Management HQ
+1564,RAF Battlespace Management HQ
+1565,RAF Battlespace Management HQ
+1566,RAF Battlespace Management HQ
+1567,RAF Battlespace Management HQ
+1568,RAF Battlespace Management HQ
+1569,RAF Battlespace Management HQ
+1570,RAF Battlespace Management HQ
+1571,RAF Battlespace Management HQ
+1572,RAF Battlespace Management HQ
+1573,RAF Battlespace Management HQ
+1574,RAF Battlespace Management HQ
+1575,RAF Battlespace Management HQ
+1576,RAF Battlespace Management HQ
+1577,RAF Battlespace Management HQ
+1600,RAF Air Command HQ
+1601,RAF Battlespace Management HQ
+1602,RAF Battlespace Management HQ
+1603,RAF Battlespace Management HQ
+1604,RAF Battlespace Management HQ
+1605,RAF Battlespace Management HQ
+1606,RAF Battlespace Management HQ
+1607,RAF Battlespace Management HQ
+1608,RAF Battlespace Management HQ
+1609,RAF Battlespace Management HQ
+1610,RAF Battlespace Management HQ
+1611,RAF Battlespace Management HQ
+1612,RAF Battlespace Management HQ
+1613,RAF Battlespace Management HQ
+1614,RAF Battlespace Management HQ
+1615,RAF Battlespace Management HQ
+1616,RAF Battlespace Management HQ
+1617,RAF Battlespace Management HQ
+1618,RAF Battlespace Management HQ
+1619,RAF Battlespace Management HQ
+1620,RAF Battlespace Management HQ
+1621,RAF Battlespace Management HQ
+1622,RAF Battlespace Management HQ
+1623,RAF Battlespace Management HQ
+1624,RAF Battlespace Management HQ
+1625,RAF Battlespace Management HQ
+1626,RAF Battlespace Management HQ
+1627,RAF Battlespace Management HQ
+1628,RAF Battlespace Management HQ
+1629,RAF Battlespace Management HQ
+1630,RAF Battlespace Management HQ
+1631,RAF Battlespace Management HQ
+1632,RAF Battlespace Management HQ
+1633,RAF Battlespace Management HQ
+1634,RAF Battlespace Management HQ
+1635,RAF Battlespace Management HQ
+1636,RAF Battlespace Management HQ
+1637,RAF Battlespace Management HQ
+1638,RAF Battlespace Management HQ
+1639,RAF Battlespace Management HQ
+1640,RAF Battlespace Management HQ
+1641,RAF Battlespace Management HQ
+1642,RAF Battlespace Management HQ
+1643,RAF Battlespace Management HQ
+1644,RAF Battlespace Management HQ
+1645,RAF Battlespace Management HQ
+1646,RAF Battlespace Management HQ
+1647,RAF Battlespace Management HQ
+1648,RAF Battlespace Management HQ
+1649,RAF Battlespace Management HQ
+1650,RAF Battlespace Management HQ
+1651,RAF Battlespace Management HQ
+1652,RAF Battlespace Management HQ
+1653,RAF Battlespace Management HQ
+1654,RAF Battlespace Management HQ
+1655,RAF Battlespace Management HQ
+1656,RAF Battlespace Management HQ
+1657,RAF Battlespace Management HQ
+1658,RAF Battlespace Management HQ
+1659,RAF Battlespace Management HQ
+1660,RAF Battlespace Management HQ
+1661,RAF Battlespace Management HQ
+1662,RAF Battlespace Management HQ
+1663,RAF Battlespace Management HQ
+1664,RAF Battlespace Management HQ
+1665,RAF Battlespace Management HQ
+1666,RAF Battlespace Management HQ
+1667,RAF Battlespace Management HQ
+1668,RAF Battlespace Management HQ
+1669,RAF Battlespace Management HQ
+1670,RAF Battlespace Management HQ
+1671,RAF Battlespace Management HQ
+1672,RAF Battlespace Management HQ
+1673,RAF Battlespace Management HQ
+1674,RAF Battlespace Management HQ
+1675,RAF Battlespace Management HQ
+1676,RAF Battlespace Management HQ
+1677,RAF Battlespace Management HQ
+1700,RAF Air Command HQ
+1701,RAF Battlespace Management HQ
+1702,RAF Battlespace Management HQ
+1703,RAF Battlespace Management HQ
+1704,RAF Battlespace Management HQ
+1705,RAF Battlespace Management HQ
+1706,RAF Battlespace Management HQ
+1707,RAF Battlespace Management HQ
+1708,RAF Battlespace Management HQ
+1709,RAF Battlespace Management HQ
+1710,RAF Battlespace Management HQ
+1711,RAF Battlespace Management HQ
+1712,RAF Battlespace Management HQ
+1713,RAF Battlespace Management HQ
+1714,RAF Battlespace Management HQ
+1715,RAF Battlespace Management HQ
+1716,RAF Battlespace Management HQ
+1717,RAF Battlespace Management HQ
+1718,RAF Battlespace Management HQ
+1719,RAF Battlespace Management HQ
+1720,RAF Battlespace Management HQ
+1721,RAF Battlespace Management HQ
+1722,RAF Battlespace Management HQ
+1723,RAF Battlespace Management HQ
+1724,RAF Battlespace Management HQ
+1725,RAF Battlespace Management HQ
+1726,RAF Battlespace Management HQ
+1727,RAF Battlespace Management HQ
+1730,ATC Newquay
+1731,ATC Newquay
+1732,ATC Newquay
+1733,ATC Newquay
+1734,ATC Newquay
+1735,ATC Newquay
+1736,ATC Newquay
+1737,ATC Newquay
+1738,ATC Newquay
+1739,ATC Newquay
+1740,ATC Newquay
+1741,ATC Newquay
+1742,ATC Newquay
+1743,ATC Newquay
+1744,ATC Newquay
+1745,ATC Newquay
+1746,ATC Newquay
+1730,ATC Farnborough LARS East
+1731,ATC Farnborough LARS East
+1732,ATC Farnborough LARS East
+1733,ATC Farnborough LARS East
+1734,ATC Farnborough LARS East
+1735,ATC Farnborough LARS East
+1736,ATC Farnborough LARS East
+1737,ATC Farnborough LARS East
+1738,ATC Farnborough LARS East
+1739,ATC Farnborough LARS East
+1740,ATC Farnborough LARS East
+1741,ATC Farnborough LARS East
+1742,ATC Farnborough LARS East
+1743,ATC Farnborough LARS East
+1744,ATC Farnborough LARS East
+1745,ATC Farnborough LARS East
+1746,ATC Farnborough LARS East
+1730,RAF Spadeadam
+1731,RAF Spadeadam
+1732,RAF Spadeadam
+1733,RAF Spadeadam
+1734,RAF Spadeadam
+1735,RAF Spadeadam
+1736,RAF Spadeadam
+1737,RAF Spadeadam
+1738,RAF Spadeadam
+1739,RAF Spadeadam
+1740,RAF Spadeadam
+1741,RAF Spadeadam
+1742,RAF Spadeadam
+1743,RAF Spadeadam
+1744,RAF Spadeadam
+1745,RAF Spadeadam
+1746,RAF Spadeadam
+1747,RAF Spadeadam
+1748,RAF Spadeadam
+1749,RAF Spadeadam
+1750,RAF Spadeadam
+1751,RAF Spadeadam
+1752,RAF Spadeadam
+1753,RAF Spadeadam
+1754,RAF Spadeadam
+1755,RAF Spadeadam
+1756,RAF Spadeadam
+1757,RAF Spadeadam
+1758,RAF Spadeadam
+1759,RAF Spadeadam
+1760,RAF Spadeadam
+1761,RAF Spadeadam
+1762,RAF Spadeadam
+1763,RAF Spadeadam
+1764,RAF Spadeadam
+1765,RAF Spadeadam
+1766,RAF Spadeadam
+1767,RAF Spadeadam
+1730,RAF Coningsby
+1731,RAF Coningsby
+1732,RAF Coningsby
+1733,RAF Coningsby
+1734,RAF Coningsby
+1735,RAF Coningsby
+1736,RAF Coningsby
+1737,RAF Coningsby
+1738,RAF Coningsby
+1739,RAF Coningsby
+1740,RAF Coningsby
+1741,RAF Coningsby
+1742,RAF Coningsby
+1743,RAF Coningsby
+1744,RAF Coningsby
+1745,RAF Coningsby
+1746,RAF Coningsby
+1747,RAF Coningsby
+1748,RAF Coningsby
+1749,RAF Coningsby
+1750,RAF Coningsby
+1751,RAF Coningsby
+1752,RAF Coningsby
+1753,RAF Coningsby
+1754,RAF Coningsby
+1755,RAF Coningsby
+1756,RAF Coningsby
+1757,RAF Coningsby
+1758,RAF Coningsby
+1759,RAF Coningsby
+1760,RAF Coningsby
+1761,RAF Coningsby
+1762,RAF Coningsby
+1763,RAF Coningsby
+1764,RAF Coningsby
+1765,RAF Coningsby
+1766,RAF Coningsby
+1767,RAF Coningsby
+1768,RAF Coningsby
+1769,RAF Coningsby
+1770,RAF Coningsby
+1771,RAF Coningsby
+1772,RAF Coningsby
+1773,RAF Coningsby
+1774,RAF Coningsby
+1775,RAF Coningsby
+1776,RAF Coningsby
+1747,ATC CONSPICUITY Farnborough LARS East
+1747,ATC CONSPICUITY Newquay
+1750,ATC IFR/SVFR Farnborough
+1751,ATC IFR/SVFR Farnborough
+1752,ATC IFR/SVFR Farnborough
+1753,ATC IFR/SVFR Farnborough
+1754,ATC IFR/SVFR Farnborough
+1755,ATC IFR/SVFR Farnborough
+1756,ATC IFR/SVFR Farnborough
+1757,ATC IFR/SVFR Farnborough
+1750,ATC Newquay
+1751,ATC Newquay
+1752,ATC Newquay
+1753,ATC Newquay
+1754,ATC Newquay
+1755,ATC Newquay
+1756,ATC Newquay
+1757,ATC CONSPICUITY Newquay LARS
+1760,RNAS Yeovilton
+1761,RNAS Yeovilton
+1762,RNAS Yeovilton
+1763,RNAS Yeovilton
+1764,RNAS Yeovilton
+1765,RNAS Yeovilton
+1766,RNAS Yeovilton
+1767,RNAS Yeovilton
+1768,RNAS Yeovilton
+1769,RNAS Yeovilton
+1770,RNAS Yeovilton
+1771,RNAS Yeovilton
+1772,RNAS Yeovilton
+1773,RNAS Yeovilton
+1774,RNAS Yeovilton
+1775,RNAS Yeovilton
+1776,RNAS Yeovilton
+1777,RNAS Yeovilton
+1777,RAF CONSPICUITY Coningsby
+2000,ATC CONSPICUITY UK
+2100,RAF Air Command HQ
+2101,ORIGIN Amsterdam
+2102,ORIGIN Amsterdam
+2103,ORIGIN Amsterdam
+2104,ORIGIN Amsterdam
+2105,ORIGIN Amsterdam
+2106,ORIGIN Amsterdam
+2107,ORIGIN Amsterdam
+2108,ORIGIN Amsterdam
+2109,ORIGIN Amsterdam
+2110,ORIGIN Amsterdam
+2111,ORIGIN Amsterdam
+2112,ORIGIN Amsterdam
+2113,ORIGIN Amsterdam
+2114,ORIGIN Amsterdam
+2115,ORIGIN Amsterdam
+2116,ORIGIN Amsterdam
+2117,ORIGIN Amsterdam
+2118,ORIGIN Amsterdam
+2119,ORIGIN Amsterdam
+2120,ORIGIN Amsterdam
+2121,ORIGIN Amsterdam
+2122,ORIGIN Amsterdam
+2123,ORIGIN Amsterdam
+2124,ORIGIN Amsterdam
+2125,ORIGIN Amsterdam
+2126,ORIGIN Amsterdam
+2127,ORIGIN Amsterdam
+2128,ORIGIN Amsterdam
+2129,ORIGIN Amsterdam
+2130,ORIGIN Amsterdam
+2131,ORIGIN Amsterdam
+2132,ORIGIN Amsterdam
+2133,ORIGIN Amsterdam
+2134,ORIGIN Amsterdam
+2135,ORIGIN Amsterdam
+2136,ORIGIN Amsterdam
+2137,ORIGIN Amsterdam
+2138,ORIGIN Amsterdam
+2139,ORIGIN Amsterdam
+2140,ORIGIN Amsterdam
+2141,ORIGIN Amsterdam
+2142,ORIGIN Amsterdam
+2143,ORIGIN Amsterdam
+2144,ORIGIN Amsterdam
+2145,ORIGIN Amsterdam
+2146,ORIGIN Amsterdam
+2147,ORIGIN Amsterdam
+2200,RAF Air Command HQ
+2300,RAF Air Command HQ
+2301,ORIGIN France
+2302,ORIGIN France
+2303,ORIGIN France
+2304,ORIGIN France
+2305,ORIGIN France
+2306,ORIGIN France
+2307,ORIGIN France
+2308,ORIGIN France
+2309,ORIGIN France
+2310,ORIGIN France
+2311,ORIGIN France
+2312,ORIGIN France
+2313,ORIGIN France
+2314,ORIGIN France
+2315,ORIGIN France
+2316,ORIGIN France
+2317,ORIGIN France
+2318,ORIGIN France
+2319,ORIGIN France
+2320,ORIGIN France
+2321,ORIGIN France
+2322,ORIGIN France
+2323,ORIGIN France
+2324,ORIGIN France
+2325,ORIGIN France
+2326,ORIGIN France
+2327,ORIGIN France
+2328,ORIGIN France
+2329,ORIGIN France
+2330,ORIGIN France
+2331,ORIGIN France
+2332,ORIGIN France
+2333,ORIGIN France
+2334,ORIGIN France
+2335,ORIGIN France
+2336,ORIGIN France
+2337,ORIGIN France
+2338,ORIGIN France
+2339,ORIGIN France
+2340,ORIGIN France
+2341,ORIGIN France
+2342,ORIGIN France
+2343,ORIGIN France
+2344,ORIGIN France
+2345,ORIGIN France
+2346,ORIGIN France
+2347,ORIGIN France
+2348,ORIGIN France
+2349,ORIGIN France
+2350,ORIGIN France
+2351,ORIGIN France
+2352,ORIGIN France
+2353,ORIGIN France
+2354,ORIGIN France
+2355,ORIGIN France
+2356,ORIGIN France
+2357,ORIGIN France
+2358,ORIGIN France
+2359,ORIGIN France
+2360,ORIGIN France
+2361,ORIGIN France
+2362,ORIGIN France
+2363,ORIGIN France
+2364,ORIGIN France
+2365,ORIGIN France
+2366,ORIGIN France
+2367,ORIGIN France
+2368,ORIGIN France
+2369,ORIGIN France
+2370,ORIGIN France
+2371,ORIGIN France
+2372,ORIGIN France
+2373,ORIGIN France
+2374,ORIGIN France
+2375,ORIGIN France
+2376,ORIGIN France
+2377,ORIGIN France
+2400,RAF Air Command HQ
+2401,RAF Battlespace Management HQ
+2402,RAF Battlespace Management HQ
+2403,RAF Battlespace Management HQ
+2404,RAF Battlespace Management HQ
+2405,RAF Battlespace Management HQ
+2406,RAF Battlespace Management HQ
+2407,RAF Battlespace Management HQ
+2408,RAF Battlespace Management HQ
+2409,RAF Battlespace Management HQ
+2410,RAF Battlespace Management HQ
+2411,RAF Battlespace Management HQ
+2412,RAF Battlespace Management HQ
+2413,RAF Battlespace Management HQ
+2414,RAF Battlespace Management HQ
+2415,RAF Battlespace Management HQ
+2416,RAF Battlespace Management HQ
+2417,RAF Battlespace Management HQ
+2418,RAF Battlespace Management HQ
+2419,RAF Battlespace Management HQ
+2420,RAF Battlespace Management HQ
+2421,RAF Battlespace Management HQ
+2422,RAF Battlespace Management HQ
+2423,RAF Battlespace Management HQ
+2424,RAF Battlespace Management HQ
+2425,RAF Battlespace Management HQ
+2426,RAF Battlespace Management HQ
+2427,RAF Battlespace Management HQ
+2428,RAF Battlespace Management HQ
+2429,RAF Battlespace Management HQ
+2430,RAF Battlespace Management HQ
+2431,RAF Battlespace Management HQ
+2432,RAF Battlespace Management HQ
+2433,RAF Battlespace Management HQ
+2434,RAF Battlespace Management HQ
+2435,RAF Battlespace Management HQ
+2436,RAF Battlespace Management HQ
+2437,RAF Battlespace Management HQ
+2438,RAF Battlespace Management HQ
+2439,RAF Battlespace Management HQ
+2440,RAF Battlespace Management HQ
+2441,RAF Battlespace Management HQ
+2442,RAF Battlespace Management HQ
+2443,RAF Battlespace Management HQ
+2444,RAF Battlespace Management HQ
+2445,RAF Battlespace Management HQ
+2446,RAF Battlespace Management HQ
+2447,RAF Battlespace Management HQ
+2448,RAF Battlespace Management HQ
+2449,RAF Battlespace Management HQ
+2450,RAF Battlespace Management HQ
+2451,RAF Battlespace Management HQ
+2452,RAF Battlespace Management HQ
+2453,RAF Battlespace Management HQ
+2454,RAF Battlespace Management HQ
+2455,RAF Battlespace Management HQ
+2456,RAF Battlespace Management HQ
+2457,RAF Battlespace Management HQ
+2458,RAF Battlespace Management HQ
+2459,RAF Battlespace Management HQ
+2460,RAF Battlespace Management HQ
+2461,RAF Battlespace Management HQ
+2462,RAF Battlespace Management HQ
+2463,RAF Battlespace Management HQ
+2464,RAF Battlespace Management HQ
+2465,RAF Battlespace Management HQ
+2466,RAF Battlespace Management HQ
+2467,RAF Battlespace Management HQ
+2468,RAF Battlespace Management HQ
+2469,RAF Battlespace Management HQ
+2470,RAF Battlespace Management HQ
+2471,RAF Battlespace Management HQ
+2472,RAF Battlespace Management HQ
+2473,RAF Battlespace Management HQ
+2474,RAF Battlespace Management HQ
+2475,RAF Battlespace Management HQ
+2476,RAF Battlespace Management HQ
+2477,RAF Battlespace Management HQ
+2500,RAF Air Command HQ
+2501,ORIGIN Germany
+2502,ORIGIN Germany
+2503,ORIGIN Germany
+2504,ORIGIN Germany
+2505,ORIGIN Germany
+2506,ORIGIN Germany
+2507,ORIGIN Germany
+2508,ORIGIN Germany
+2509,ORIGIN Germany
+2510,ORIGIN Germany
+2511,ORIGIN Germany
+2512,ORIGIN Germany
+2513,ORIGIN Germany
+2514,ORIGIN Germany
+2515,ORIGIN Germany
+2516,ORIGIN Germany
+2517,ORIGIN Germany
+2518,ORIGIN Germany
+2519,ORIGIN Germany
+2520,ORIGIN Germany
+2521,ORIGIN Germany
+2522,ORIGIN Germany
+2523,ORIGIN Germany
+2524,ORIGIN Germany
+2525,ORIGIN Germany
+2526,ORIGIN Germany
+2527,ORIGIN Germany
+2528,ORIGIN Germany
+2529,ORIGIN Germany
+2530,ORIGIN Germany
+2531,ORIGIN Germany
+2532,ORIGIN Germany
+2533,ORIGIN Germany
+2534,ORIGIN Germany
+2535,ORIGIN Germany
+2536,ORIGIN Germany
+2537,ORIGIN Germany
+2538,ORIGIN Germany
+2539,ORIGIN Germany
+2540,ORIGIN Germany
+2541,ORIGIN Germany
+2542,ORIGIN Germany
+2543,ORIGIN Germany
+2544,ORIGIN Germany
+2545,ORIGIN Germany
+2546,ORIGIN Germany
+2547,ORIGIN Germany
+2548,ORIGIN Germany
+2549,ORIGIN Germany
+2550,ORIGIN Germany
+2551,ORIGIN Germany
+2552,ORIGIN Germany
+2553,ORIGIN Germany
+2554,ORIGIN Germany
+2555,ORIGIN Germany
+2556,ORIGIN Germany
+2557,ORIGIN Germany
+2558,ORIGIN Germany
+2559,ORIGIN Germany
+2560,ORIGIN Germany
+2561,ORIGIN Germany
+2562,ORIGIN Germany
+2563,ORIGIN Germany
+2564,ORIGIN Germany
+2565,ORIGIN Germany
+2566,ORIGIN Germany
+2567,ORIGIN Germany
+2568,ORIGIN Germany
+2569,ORIGIN Germany
+2570,ORIGIN Germany
+2571,ORIGIN Germany
+2572,ORIGIN Germany
+2573,ORIGIN Germany
+2574,ORIGIN Germany
+2575,ORIGIN Germany
+2576,ORIGIN Germany
+2577,ORIGIN Germany
+2600,RAF Air Command HQ
+2601,ATC Glasgow
+2602,ATC Glasgow
+2603,ATC Glasgow
+2604,ATC Glasgow
+2605,ATC Glasgow
+2606,ATC Glasgow
+2607,ATC Glasgow
+2608,ATC Glasgow
+2609,ATC Glasgow
+2610,ATC Glasgow
+2611,ATC Glasgow
+2612,ATC Glasgow
+2613,ATC Glasgow
+2614,ATC Glasgow
+2615,ATC Glasgow
+2616,ATC Glasgow
+2617,ATC Glasgow
+2601,RAF Cranwell
+2602,RAF Cranwell
+2603,RAF Cranwell
+2604,RAF Cranwell
+2605,RAF Cranwell
+2606,RAF Cranwell
+2607,RAF Cranwell
+2608,RAF Cranwell
+2609,RAF Cranwell
+2610,RAF Cranwell
+2611,RAF Cranwell
+2612,RAF Cranwell
+2613,RAF Cranwell
+2614,RAF Cranwell
+2615,RAF Cranwell
+2616,RAF Cranwell
+2617,RAF Cranwell
+2618,RAF Cranwell
+2619,RAF Cranwell
+2620,RAF Cranwell
+2621,RAF Cranwell
+2622,RAF Cranwell
+2623,RAF Cranwell
+2624,RAF Cranwell
+2625,RAF Cranwell
+2626,RAF Cranwell
+2627,RAF Cranwell
+2628,RAF Cranwell
+2629,RAF Cranwell
+2630,RAF Cranwell
+2631,RAF Cranwell
+2632,RAF Cranwell
+2633,RAF Cranwell
+2634,RAF Cranwell
+2635,RAF Cranwell
+2636,RAF Cranwell
+2637,RAF Cranwell
+2601,RAF Boscombe Down
+2602,RAF Boscombe Down
+2603,RAF Boscombe Down
+2604,RAF Boscombe Down
+2605,RAF Boscombe Down
+2606,RAF Boscombe Down
+2607,RAF Boscombe Down
+2608,RAF Boscombe Down
+2609,RAF Boscombe Down
+2610,RAF Boscombe Down
+2611,RAF Boscombe Down
+2612,RAF Boscombe Down
+2613,RAF Boscombe Down
+2614,RAF Boscombe Down
+2615,RAF Boscombe Down
+2616,RAF Boscombe Down
+2617,RAF Boscombe Down
+2618,RAF Boscombe Down
+2619,RAF Boscombe Down
+2620,RAF Boscombe Down
+2621,RAF Boscombe Down
+2622,RAF Boscombe Down
+2623,RAF Boscombe Down
+2624,RAF Boscombe Down
+2625,RAF Boscombe Down
+2626,RAF Boscombe Down
+2627,RAF Boscombe Down
+2628,RAF Boscombe Down
+2629,RAF Boscombe Down
+2630,RAF Boscombe Down
+2631,RAF Boscombe Down
+2632,RAF Boscombe Down
+2633,RAF Boscombe Down
+2634,RAF Boscombe Down
+2635,RAF Boscombe Down
+2636,RAF Boscombe Down
+2637,RAF Boscombe Down
+2638,RAF Boscombe Down
+2639,RAF Boscombe Down
+2640,RAF Boscombe Down
+2641,RAF Boscombe Down
+2642,RAF Boscombe Down
+2643,RAF Boscombe Down
+2644,RAF Boscombe Down
+2645,RAF Boscombe Down
+2601,ATC Ireland
+2602,ATC Ireland
+2603,ATC Ireland
+2604,ATC Ireland
+2605,ATC Ireland
+2606,ATC Ireland
+2607,ATC Ireland
+2608,ATC Ireland
+2609,ATC Ireland
+2610,ATC Ireland
+2611,ATC Ireland
+2612,ATC Ireland
+2613,ATC Ireland
+2614,ATC Ireland
+2615,ATC Ireland
+2616,ATC Ireland
+2617,ATC Ireland
+2618,ATC Ireland
+2619,ATC Ireland
+2620,ATC Ireland
+2621,ATC Ireland
+2622,ATC Ireland
+2623,ATC Ireland
+2624,ATC Ireland
+2625,ATC Ireland
+2626,ATC Ireland
+2627,ATC Ireland
+2628,ATC Ireland
+2629,ATC Ireland
+2630,ATC Ireland
+2631,ATC Ireland
+2632,ATC Ireland
+2633,ATC Ireland
+2634,ATC Ireland
+2635,ATC Ireland
+2636,ATC Ireland
+2637,ATC Ireland
+2638,ATC Ireland
+2639,ATC Ireland
+2640,ATC Ireland
+2641,ATC Ireland
+2642,ATC Ireland
+2643,ATC Ireland
+2644,ATC Ireland
+2645,ATC Ireland
+2646,ATC Ireland
+2647,ATC Ireland
+2648,ATC Ireland
+2649,ATC Ireland
+2650,ATC Ireland
+2651,ATC Ireland
+2652,ATC Ireland
+2653,ATC Ireland
+2654,ATC Ireland
+2655,ATC Ireland
+2656,ATC Ireland
+2657,ATC Ireland
+2620,CAS Glasgow
+2621,ATC Aberdeen Sumburgh
+2622,ATC Aberdeen Sumburgh
+2623,ATC Aberdeen Sumburgh
+2624,ATC Aberdeen Sumburgh
+2625,ATC Aberdeen Sumburgh
+2626,ATC Aberdeen Sumburgh
+2627,ATC Aberdeen Sumburgh
+2628,ATC Aberdeen Sumburgh
+2629,ATC Aberdeen Sumburgh
+2630,ATC Aberdeen Sumburgh
+2631,ATC Aberdeen Offshore
+2632,ATC Aberdeen Offshore
+2633,ATC Aberdeen Offshore
+2634,ATC Aberdeen Offshore
+2635,ATC Aberdeen Offshore
+2636,ATC Aberdeen Offshore
+2637,ATC Aberdeen Offshore
+2640,RAF AIAA Cranwell
+2641,RAF AIAA Cranwell
+2642,RAF AIAA Cranwell
+2640,ATC Aberdeen Offshore
+2641,ATC Aberdeen Offshore
+2642,ATC Aberdeen Offshore
+2643,ATC Aberdeen Offshore
+2644,ATC Aberdeen Offshore
+2645,ATC Aberdeen Offshore
+2646,ATC Aberdeen Offshore
+2647,ATC Aberdeen Offshore
+2648,ATC Aberdeen Offshore
+2649,ATC Aberdeen Offshore
+2650,ATC Aberdeen Offshore
+2651,ATC Aberdeen Offshore
+2652,ATC Aberdeen Offshore
+2653,ATC Aberdeen Offshore
+2654,ATC Aberdeen Offshore
+2655,ATC Aberdeen Offshore
+2656,ATC Aberdeen Offshore
+2657,ATC Aberdeen Offshore
+2643,RAF Cranwell
+2644,RAF Cranwell
+2645,RAF CONSPICUITY Cranwell
+2646,RAF Cranwell
+2647,RAF Cranwell
+2646,RAF UAS Boscombe Down
+2647,RAF UAS Boscombe Down
+2650,RAF CONSPICUITY Boscombe Down
+2650,ATC Leeds Bradford
+2651,ATC Leeds Bradford
+2652,ATC Leeds Bradford
+2653,ATC Leeds Bradford
+2651,RAF Boscombe Down
+2652,RAF Boscombe Down
+2653,RAF Boscombe Down
+2654,RAF Boscombe Down
+2655,RAF Boscombe Down
+2656,RAF Boscombe Down
+2657,RAF Boscombe Down
+2654,ATC CONSPICUITY Leeds Bradford
+2655,ATC Leeds Bradford
+2656,ATC Leeds Bradford
+2657,ATC Leeds Bradford
+2658,ATC Leeds Bradford
+2659,ATC Leeds Bradford
+2660,ATC Leeds Bradford
+2661,ATC Leeds Bradford
+2662,ATC Leeds Bradford
+2663,ATC Leeds Bradford
+2664,ATC Leeds Bradford
+2665,ATC Leeds Bradford
+2666,ATC Leeds Bradford
+2667,ATC Leeds Bradford
+2668,ATC Leeds Bradford
+2669,ATC Leeds Bradford
+2670,ATC Leeds Bradford
+2671,ATC Leeds Bradford
+2672,ATC Leeds Bradford
+2673,ATC Leeds Bradford
+2674,ATC Leeds Bradford
+2675,ATC Leeds Bradford
+2676,ATC Leeds Bradford
+2660,RAF CONSPICUITY Thruxton
+2660,ATC Aberdeen Offshore
+2661,ATC Aberdeen Offshore
+2662,ATC Aberdeen Offshore
+2663,ATC Aberdeen Offshore
+2664,ATC Aberdeen Offshore
+2665,ATC Aberdeen Offshore
+2666,ATC Aberdeen Offshore
+2667,ATC Aberdeen Offshore
+2668,ATC Aberdeen Offshore
+2669,ATC Aberdeen Offshore
+2670,ATC Aberdeen Offshore
+2671,ATC Aberdeen Offshore
+2672,ATC Aberdeen Offshore
+2673,ATC Aberdeen Offshore
+2674,ATC Aberdeen Offshore
+2675,ATC Aberdeen Offshore
+2676,ATC Aberdeen Offshore
+2677,ATC Aberdeen Offshore
+2661,ATC Middle Wallop
+2662,ATC Middle Wallop
+2663,ATC Middle Wallop
+2664,ATC Middle Wallop
+2665,ATC Middle Wallop
+2666,ATC Middle Wallop
+2667,ATC Middle Wallop
+2668,ATC Middle Wallop
+2669,ATC Middle Wallop
+2670,ATC Middle Wallop
+2671,ATC Middle Wallop
+2672,ATC Middle Wallop
+2673,ATC Middle Wallop
+2674,ATC Middle Wallop
+2675,ATC Middle Wallop
+2676,ATC CONSPICUITY Middle Wallop
+2677,ATC CONSPICUITY Middle Wallop
+2677,ATC Leeds Bradford
+2700,RAF Air Command HQ
+2740,ORIGIN Zurich
+2741,ORIGIN Zurich
+2742,ORIGIN Zurich
+2743,ORIGIN Zurich
+2744,ORIGIN Zurich
+2745,ORIGIN Zurich
+2746,ORIGIN Zurich
+2747,ORIGIN Zurich
+2748,ORIGIN Zurich
+2749,ORIGIN Zurich
+2750,ORIGIN Zurich
+2751,ORIGIN Zurich
+2752,ORIGIN Zurich
+2753,ORIGIN Zurich
+2754,ORIGIN Zurich
+2755,ORIGIN Zurich
+2756,ORIGIN Zurich
+2757,ORIGIN Zurich
+2758,ORIGIN Zurich
+2759,ORIGIN Zurich
+2760,ORIGIN Zurich
+2761,ORIGIN Zurich
+2762,ORIGIN Zurich
+2763,ORIGIN Zurich
+2764,ORIGIN Zurich
+2765,ORIGIN Zurich
+2766,ORIGIN Zurich
+2767,ORIGIN Zurich
+2768,ORIGIN Zurich
+2769,ORIGIN Zurich
+2770,ORIGIN Zurich
+2771,ORIGIN Zurich
+2772,ORIGIN Zurich
+2773,ORIGIN Zurich
+2774,ORIGIN Zurich
+2775,ORIGIN Zurich
+2776,ORIGIN Zurich
+2777,ORIGIN Zurich
+3000,SERVICING AEW NATO
+3001,ORIGIN Zurich
+3002,ORIGIN Zurich
+3003,ORIGIN Zurich
+3004,ORIGIN Zurich
+3005,ORIGIN Zurich
+3006,ORIGIN Zurich
+3007,ORIGIN Zurich
+3008,ORIGIN Zurich
+3009,ORIGIN Zurich
+3010,ORIGIN Zurich
+3011,ORIGIN Zurich
+3012,ORIGIN Zurich
+3013,ORIGIN Zurich
+3014,ORIGIN Zurich
+3015,ORIGIN Zurich
+3016,ORIGIN Zurich
+3017,ORIGIN Zurich
+3018,ORIGIN Zurich
+3019,ORIGIN Zurich
+3020,ORIGIN Zurich
+3021,ORIGIN Zurich
+3022,ORIGIN Zurich
+3023,ORIGIN Zurich
+3024,ORIGIN Zurich
+3025,ORIGIN Zurich
+3026,ORIGIN Zurich
+3027,ORIGIN Zurich
+3028,ORIGIN Zurich
+3029,ORIGIN Zurich
+3030,ORIGIN Zurich
+3031,ORIGIN Zurich
+3032,ORIGIN Zurich
+3033,ORIGIN Zurich
+3034,ORIGIN Zurich
+3035,ORIGIN Zurich
+3036,ORIGIN Zurich
+3037,ORIGIN Zurich
+3038,ORIGIN Zurich
+3039,ORIGIN Zurich
+3040,ORIGIN Zurich
+3041,ORIGIN Zurich
+3042,ORIGIN Zurich
+3043,ORIGIN Zurich
+3044,ORIGIN Zurich
+3045,ORIGIN Zurich
+3046,ORIGIN Zurich
+3047,ORIGIN Zurich
+3048,ORIGIN Zurich
+3049,ORIGIN Zurich
+3050,ORIGIN Zurich
+3051,ORIGIN Zurich
+3052,ORIGIN Zurich
+3053,ORIGIN Zurich
+3054,ORIGIN Zurich
+3055,ORIGIN Zurich
+3056,ORIGIN Zurich
+3057,ORIGIN Zurich
+3058,ORIGIN Zurich
+3059,ORIGIN Zurich
+3060,ORIGIN Zurich
+3061,ORIGIN Zurich
+3062,ORIGIN Zurich
+3063,ORIGIN Zurich
+3064,ORIGIN Zurich
+3065,ORIGIN Zurich
+3066,ORIGIN Zurich
+3067,ORIGIN Zurich
+3068,ORIGIN Zurich
+3069,ORIGIN Zurich
+3070,ORIGIN Zurich
+3071,ORIGIN Zurich
+3072,ORIGIN Zurich
+3073,ORIGIN Zurich
+3074,ORIGIN Zurich
+3075,ORIGIN Zurich
+3076,ORIGIN Zurich
+3077,ORIGIN Zurich
+3100,SERVICING AEW NATO
+3101,ORIGIN Germany
+3102,ORIGIN Germany
+3103,ORIGIN Germany
+3104,ORIGIN Germany
+3105,ORIGIN Germany
+3106,ORIGIN Germany
+3107,ORIGIN Germany
+3108,ORIGIN Germany
+3109,ORIGIN Germany
+3110,ORIGIN Germany
+3111,ORIGIN Germany
+3112,ORIGIN Germany
+3113,ORIGIN Germany
+3114,ORIGIN Germany
+3115,ORIGIN Germany
+3116,ORIGIN Germany
+3117,ORIGIN Germany
+3118,ORIGIN Germany
+3119,ORIGIN Germany
+3120,ORIGIN Germany
+3121,ORIGIN Germany
+3122,ORIGIN Germany
+3123,ORIGIN Germany
+3124,ORIGIN Germany
+3125,ORIGIN Germany
+3126,ORIGIN Germany
+3127,ORIGIN Germany
+3130,ORIGIN Amsterdam
+3131,ORIGIN Amsterdam
+3132,ORIGIN Amsterdam
+3133,ORIGIN Amsterdam
+3134,ORIGIN Amsterdam
+3135,ORIGIN Amsterdam
+3136,ORIGIN Amsterdam
+3137,ORIGIN Amsterdam
+3138,ORIGIN Amsterdam
+3139,ORIGIN Amsterdam
+3140,ORIGIN Amsterdam
+3141,ORIGIN Amsterdam
+3142,ORIGIN Amsterdam
+3143,ORIGIN Amsterdam
+3144,ORIGIN Amsterdam
+3145,ORIGIN Amsterdam
+3146,ORIGIN Amsterdam
+3147,ORIGIN Amsterdam
+3148,ORIGIN Amsterdam
+3149,ORIGIN Amsterdam
+3150,ORIGIN Amsterdam
+3151,ORIGIN Amsterdam
+3152,ORIGIN Amsterdam
+3153,ORIGIN Amsterdam
+3154,ORIGIN Amsterdam
+3155,ORIGIN Amsterdam
+3156,ORIGIN Amsterdam
+3157,ORIGIN Amsterdam
+3158,ORIGIN Amsterdam
+3159,ORIGIN Amsterdam
+3160,ORIGIN Amsterdam
+3161,ORIGIN Amsterdam
+3162,ORIGIN Amsterdam
+3163,ORIGIN Amsterdam
+3164,ORIGIN Amsterdam
+3165,ORIGIN Amsterdam
+3166,ORIGIN Amsterdam
+3167,ORIGIN Amsterdam
+3168,ORIGIN Amsterdam
+3169,ORIGIN Amsterdam
+3170,ORIGIN Amsterdam
+3171,ORIGIN Amsterdam
+3172,ORIGIN Amsterdam
+3173,ORIGIN Amsterdam
+3174,ORIGIN Amsterdam
+3175,ORIGIN Amsterdam
+3176,ORIGIN Amsterdam
+3177,ORIGIN Amsterdam
+3200,SERVICING AEW NATO
+3201,ORIGIN Turkey
+3202,ORIGIN Turkey
+3203,ORIGIN Turkey
+3204,ORIGIN Turkey
+3205,ORIGIN Turkey
+3206,ORIGIN Turkey
+3207,ORIGIN Turkey
+3208,ORIGIN Turkey
+3209,ORIGIN Turkey
+3210,ORIGIN Turkey
+3211,ORIGIN Turkey
+3212,ORIGIN Turkey
+3213,ORIGIN Turkey
+3214,ORIGIN Turkey
+3215,ORIGIN Turkey
+3216,ORIGIN Turkey
+3217,ORIGIN Turkey
+3218,ORIGIN Turkey
+3219,ORIGIN Turkey
+3220,ORIGIN Turkey
+3221,ORIGIN Turkey
+3222,ORIGIN Turkey
+3223,ORIGIN Turkey
+3224,ORIGIN Turkey
+3225,ORIGIN Turkey
+3226,ORIGIN Turkey
+3227,ORIGIN Turkey
+3228,ORIGIN Turkey
+3229,ORIGIN Turkey
+3230,ORIGIN Turkey
+3231,ORIGIN Turkey
+3232,ORIGIN Turkey
+3233,ORIGIN Turkey
+3234,ORIGIN Turkey
+3235,ORIGIN Turkey
+3236,ORIGIN Turkey
+3237,ORIGIN Turkey
+3238,ORIGIN Turkey
+3239,ORIGIN Turkey
+3240,ORIGIN Turkey
+3241,ORIGIN Turkey
+3242,ORIGIN Turkey
+3243,ORIGIN Turkey
+3244,ORIGIN Turkey
+3245,ORIGIN Turkey
+3246,ORIGIN Turkey
+3247,ORIGIN Turkey
+3248,ORIGIN Turkey
+3249,ORIGIN Turkey
+3250,ORIGIN Turkey
+3251,ORIGIN Turkey
+3252,ORIGIN Turkey
+3253,ORIGIN Turkey
+3254,ORIGIN Turkey
+3255,ORIGIN Turkey
+3256,ORIGIN Turkey
+3257,ORIGIN Turkey
+3258,ORIGIN Turkey
+3259,ORIGIN Turkey
+3260,ORIGIN Turkey
+3261,ORIGIN Turkey
+3262,ORIGIN Turkey
+3263,ORIGIN Turkey
+3264,ORIGIN Turkey
+3265,ORIGIN Turkey
+3266,ORIGIN Turkey
+3267,ORIGIN Turkey
+3268,ORIGIN Turkey
+3269,ORIGIN Turkey
+3270,ORIGIN Turkey
+3271,ORIGIN Turkey
+3272,ORIGIN Turkey
+3273,ORIGIN Turkey
+3274,ORIGIN Turkey
+3275,ORIGIN Turkey
+3276,ORIGIN Turkey
+3277,ORIGIN Turkey
+3300,SERVICING AEW NATO
+3301,RAF SPECIAL Swanwick
+3302,RAF SPECIAL Swanwick
+3303,RAF SPECIAL Swanwick
+3304,D&D London
+3305,D&D London
+3306,D&D London
+3307,D&D CONSPICUITY London
+3310,RAF Swanwick
+3311,RAF Swanwick
+3312,RAF Swanwick
+3313,RAF Swanwick
+3314,RAF Swanwick
+3315,RAF Swanwick
+3316,RAF Swanwick
+3317,RAF Swanwick
+3318,RAF Swanwick
+3319,RAF Swanwick
+3320,RAF Swanwick
+3321,RAF Swanwick
+3322,RAF Swanwick
+3323,RAF Swanwick
+3324,RAF Swanwick
+3325,RAF Swanwick
+3326,RAF Swanwick
+3327,RAF Swanwick
+3328,RAF Swanwick
+3329,RAF Swanwick
+3330,RAF Swanwick
+3331,RAF Swanwick
+3332,RAF Swanwick
+3333,RAF Swanwick
+3334,RAF Swanwick
+3335,RAF Swanwick
+3336,RAF Swanwick
+3337,RAF Swanwick
+3338,RAF Swanwick
+3339,RAF Swanwick
+3340,RAF Swanwick
+3341,RAF Swanwick
+3342,RAF Swanwick
+3343,RAF Swanwick
+3344,RAF Swanwick
+3345,RAF Swanwick
+3346,RAF Swanwick
+3347,RAF Swanwick
+3348,RAF Swanwick
+3349,RAF Swanwick
+3350,RAF Swanwick
+3351,RAF Swanwick
+3352,RAF Swanwick
+3353,RAF Swanwick
+3354,RAF Swanwick
+3355,RAF Swanwick
+3356,RAF Swanwick
+3357,RAF Swanwick
+3358,RAF Swanwick
+3359,RAF Swanwick
+3360,RAF Swanwick
+3361,RAF Swanwick
+3362,RAF Swanwick
+3363,RAF Swanwick
+3364,RAF Swanwick
+3365,RAF Swanwick
+3366,RAF Swanwick
+3367,RAF Swanwick
+3400,SERVICING AEW NATO
+3500,SERVICING AEW NATO
+3501,ORIGIN Luxembourg
+3502,ORIGIN Luxembourg
+3503,ORIGIN Luxembourg
+3504,ORIGIN Luxembourg
+3505,ORIGIN Luxembourg
+3506,ORIGIN Luxembourg
+3507,ORIGIN Luxembourg
+3540,ORIGIN Berlin
+3541,ORIGIN Berlin
+3542,ORIGIN Berlin
+3543,ORIGIN Berlin
+3544,ORIGIN Berlin
+3545,ORIGIN Berlin
+3546,ORIGIN Berlin
+3547,ORIGIN Berlin
+3548,ORIGIN Berlin
+3549,ORIGIN Berlin
+3550,ORIGIN Berlin
+3551,ORIGIN Berlin
+3552,ORIGIN Berlin
+3553,ORIGIN Berlin
+3554,ORIGIN Berlin
+3555,ORIGIN Berlin
+3556,ORIGIN Berlin
+3557,ORIGIN Berlin
+3558,ORIGIN Berlin
+3559,ORIGIN Berlin
+3560,ORIGIN Berlin
+3561,ORIGIN Berlin
+3562,ORIGIN Berlin
+3563,ORIGIN Berlin
+3564,ORIGIN Berlin
+3565,ORIGIN Berlin
+3566,ORIGIN Berlin
+3567,ORIGIN Berlin
+3568,ORIGIN Berlin
+3569,ORIGIN Berlin
+3570,ORIGIN Berlin
+3571,ORIGIN Berlin
+3572,ORIGIN Berlin
+3573,ORIGIN Berlin
+3574,ORIGIN Berlin
+3575,ORIGIN Berlin
+3576,ORIGIN Berlin
+3577,ORIGIN Berlin
+3600,SERVICING AEW NATO
+3601,RAF Benson
+3602,RAF Benson
+3603,RAF Benson
+3604,RAF Benson
+3605,RAF Benson
+3606,RAF Benson
+3607,RAF Benson
+3608,RAF Benson
+3609,RAF Benson
+3610,RAF Benson
+3611,RAF Benson
+3612,RAF Benson
+3613,RAF Benson
+3614,RAF Benson
+3615,RAF Benson
+3616,RAF Benson
+3617,RAF Benson
+3618,RAF Benson
+3619,RAF Benson
+3620,RAF Benson
+3621,RAF Benson
+3622,RAF Benson
+3623,RAF Benson
+3601,ATC Scotland
+3602,ATC Scotland
+3603,ATC Scotland
+3604,ATC Scotland
+3605,ATC Scotland
+3606,ATC Scotland
+3607,ATC Scotland
+3608,ATC Scotland
+3609,ATC Scotland
+3610,ATC Scotland
+3611,ATC Scotland
+3612,ATC Scotland
+3613,ATC Scotland
+3614,ATC Scotland
+3615,ATC Scotland
+3616,ATC Scotland
+3617,ATC Scotland
+3618,ATC Scotland
+3619,ATC Scotland
+3620,ATC Scotland
+3621,ATC Scotland
+3622,ATC Scotland
+3623,ATC Scotland
+3624,ATC Scotland
+3625,ATC Scotland
+3626,ATC Scotland
+3627,ATC Scotland
+3628,ATC Scotland
+3629,ATC Scotland
+3630,ATC Scotland
+3631,ATC Scotland
+3632,ATC Scotland
+3601,RAF Waddington
+3602,RAF Waddington
+3603,RAF Waddington
+3604,RAF Waddington
+3605,RAF Waddington
+3606,RAF Waddington
+3607,RAF Waddington
+3608,RAF Waddington
+3609,RAF Waddington
+3610,RAF Waddington
+3611,RAF Waddington
+3612,RAF Waddington
+3613,RAF Waddington
+3614,RAF Waddington
+3615,RAF Waddington
+3616,RAF Waddington
+3617,RAF Waddington
+3618,RAF Waddington
+3619,RAF Waddington
+3620,RAF Waddington
+3621,RAF Waddington
+3622,RAF Waddington
+3623,RAF Waddington
+3624,RAF Waddington
+3625,RAF Waddington
+3626,RAF Waddington
+3627,RAF Waddington
+3628,RAF Waddington
+3629,RAF Waddington
+3630,RAF Waddington
+3631,RAF Waddington
+3632,RAF Waddington
+3633,RAF Waddington
+3634,RAF Waddington
+3601,ATC Jersey
+3602,ATC Jersey
+3603,ATC Jersey
+3604,ATC Jersey
+3605,ATC Jersey
+3606,ATC Jersey
+3607,ATC Jersey
+3608,ATC Jersey
+3609,ATC Jersey
+3610,ATC Jersey
+3611,ATC Jersey
+3612,ATC Jersey
+3613,ATC Jersey
+3614,ATC Jersey
+3615,ATC Jersey
+3616,ATC Jersey
+3617,ATC Jersey
+3618,ATC Jersey
+3619,ATC Jersey
+3620,ATC Jersey
+3621,ATC Jersey
+3622,ATC Jersey
+3623,ATC Jersey
+3624,ATC Jersey
+3625,ATC Jersey
+3626,ATC Jersey
+3627,ATC Jersey
+3628,ATC Jersey
+3629,ATC Jersey
+3630,ATC Jersey
+3631,ATC Jersey
+3632,ATC Jersey
+3633,ATC Jersey
+3634,ATC Jersey
+3635,ATC Jersey
+3636,ATC Jersey
+3637,ATC Jersey
+3638,ATC Jersey
+3639,ATC Jersey
+3640,ATC Jersey
+3641,ATC Jersey
+3642,ATC Jersey
+3643,ATC Jersey
+3644,ATC Jersey
+3645,ATC Jersey
+3646,ATC Jersey
+3647,ATC Jersey
+3601,ATC Cardiff
+3602,ATC Cardiff
+3603,ATC Cardiff
+3604,ATC Cardiff
+3605,ATC Cardiff
+3606,ATC Cardiff
+3607,ATC Cardiff
+3608,ATC Cardiff
+3609,ATC Cardiff
+3610,ATC Cardiff
+3611,ATC Cardiff
+3612,ATC Cardiff
+3613,ATC Cardiff
+3614,ATC Cardiff
+3615,ATC Cardiff
+3616,ATC Cardiff
+3617,ATC Cardiff
+3618,ATC Cardiff
+3619,ATC Cardiff
+3620,ATC Cardiff
+3621,ATC Cardiff
+3622,ATC Cardiff
+3623,ATC Cardiff
+3624,ATC Cardiff
+3625,ATC Cardiff
+3626,ATC Cardiff
+3627,ATC Cardiff
+3628,ATC Cardiff
+3629,ATC Cardiff
+3630,ATC Cardiff
+3631,ATC Cardiff
+3632,ATC Cardiff
+3633,ATC Cardiff
+3634,ATC Cardiff
+3635,ATC Cardiff
+3636,ATC Cardiff
+3637,ATC Cardiff
+3638,ATC Cardiff
+3639,ATC Cardiff
+3640,ATC Cardiff
+3641,ATC Cardiff
+3642,ATC Cardiff
+3643,ATC Cardiff
+3644,ATC Cardiff
+3645,ATC Cardiff
+3646,ATC Cardiff
+3647,ATC Cardiff
+3648,ATC Cardiff
+3649,ATC Cardiff
+3650,ATC Cardiff
+3651,ATC Cardiff
+3652,ATC Cardiff
+3653,ATC Cardiff
+3654,ATC Cardiff
+3655,ATC Cardiff
+3656,ATC Cardiff
+3657,ATC Cardiff
+3624,RAF CONSPICUITY Benson
+3625,RAF Benson
+3626,RAF Benson
+3627,RAF Benson
+3636,CAS Cardiff
+3637,ATC CONSPICUITY Wycombe Air Park
+3640,RAF Odiham
+3641,RAF Odiham
+3642,RAF Odiham
+3643,RAF Odiham
+3645,RAF Odiham
+3640,RAF Marham
+3641,RAF Marham
+3642,RAF Marham
+3643,RAF Marham
+3644,RAF Marham
+3645,RAF Marham
+3646,RAF Marham
+3647,RAF Marham
+3648,RAF Marham
+3649,RAF Marham
+3650,RAF Marham
+3651,RAF Marham
+3652,RAF Marham
+3653,RAF Marham
+3654,RAF Marham
+3655,RAF Marham
+3656,RAF Marham
+3657,RAF Marham
+3658,RAF Marham
+3659,RAF Marham
+3660,RAF Marham
+3661,RAF Marham
+3662,RAF Marham
+3663,RAF Marham
+3664,RAF Marham
+3665,RAF Marham
+3666,RAF Marham
+3640,ATC Aberdeen Offshore
+3641,ATC Aberdeen Offshore
+3642,ATC Aberdeen Offshore
+3643,ATC Aberdeen Offshore
+3644,ATC Aberdeen Offshore
+3645,ATC Aberdeen Offshore
+3646,ATC Aberdeen Offshore
+3647,ATC Aberdeen Offshore
+3648,ATC Aberdeen Offshore
+3649,ATC Aberdeen Offshore
+3650,ATC Aberdeen Offshore
+3651,ATC Aberdeen Offshore
+3652,ATC Aberdeen Offshore
+3653,ATC Aberdeen Offshore
+3654,ATC Aberdeen Offshore
+3655,ATC Aberdeen Offshore
+3656,ATC Aberdeen Offshore
+3657,ATC Aberdeen Offshore
+3658,ATC Aberdeen Offshore
+3659,ATC Aberdeen Offshore
+3660,ATC Aberdeen Offshore
+3661,ATC Aberdeen Offshore
+3662,ATC Aberdeen Offshore
+3663,ATC Aberdeen Offshore
+3664,ATC Aberdeen Offshore
+3665,ATC Aberdeen Offshore
+3666,ATC Aberdeen Offshore
+3667,ATC Aberdeen Offshore
+3668,ATC Aberdeen Offshore
+3669,ATC Aberdeen Offshore
+3670,ATC Aberdeen Offshore
+3671,ATC Aberdeen Offshore
+3672,ATC Aberdeen Offshore
+3673,ATC Aberdeen Offshore
+3674,ATC Aberdeen Offshore
+3675,ATC Aberdeen Offshore
+3676,ATC Aberdeen Offshore
+3677,ATC Aberdeen Offshore
+3641,ATC BAE
+3642,ATC BAE
+3643,ATC BAE
+3644,ATC BAE
+3645,ATC BAE
+3646,ATC BAE
+3647,ATC BAE
+3646,RAF CONSPICUITY Odiham
+3646,ATC Cardiff
+3647,ATC Cardiff
+3648,ATC Cardiff
+3649,ATC Cardiff
+3650,ATC Cardiff
+3651,ATC Cardiff
+3652,ATC Cardiff
+3653,ATC Cardiff
+3654,ATC Cardiff
+3655,ATC Cardiff
+3656,ATC Cardiff
+3657,ATC Cardiff
+3647,RAF Odiham
+3648,RAF Odiham
+3649,RAF Odiham
+3650,RAF Odiham
+3651,RAF Odiham
+3652,RAF Odiham
+3653,RAF Odiham
+3650,ATC CONSPICUITY BAE
+3651,ATC BAE
+3652,ATC BAE
+3653,ATC BAE
+3654,ATC BAE
+3655,ATC BAE
+3656,ATC BAE
+3657,ATC BAE
+3660,ATC Warton Aerodrome
+3660,ATC Solent
+3661,ATC Solent
+3662,ATC Solent
+3663,ATC Solent
+3664,ATC Solent
+3665,ATC Solent
+3661,ATC BAE
+3662,ATC BAE
+3663,ATC BAE
+3664,ATC BAE
+3665,ATC BAE
+3666,ATC BAE
+3667,ATC BAE
+3668,ATC BAE
+3669,ATC BAE
+3670,ATC BAE
+3671,ATC BAE
+3672,ATC BAE
+3673,ATC BAE
+3674,ATC BAE
+3675,ATC BAE
+3676,ATC BAE
+3677,ATC BAE
+3666,ATC CONSPICUITY Solent
+3667,RAF CONSPICUITY Marham
+3667,ATC Solent
+3668,ATC Solent
+3669,ATC Solent
+3670,ATC Solent
+3671,ATC Solent
+3672,ATC Solent
+3673,ATC Solent
+3674,ATC Solent
+3675,ATC Solent
+3676,ATC Solent
+3677,ATC Solent
+3700,SERVICING AEW NATO
+3701,ATC Norwich
+3702,ATC Norwich
+3703,ATC Norwich
+3704,ATC Norwich
+3705,ATC Norwich
+3706,ATC Norwich
+3707,ATC BASIC Norwich
+3710,ATC Norwich
+3701,SERVICING AEW RAF
+3702,SERVICING AEW RAF
+3703,SERVICING AEW RAF
+3704,SERVICING AEW RAF
+3705,SERVICING AEW RAF
+3706,SERVICING AEW RAF
+3707,SERVICING AEW RAF
+3708,SERVICING AEW RAF
+3709,SERVICING AEW RAF
+3710,SERVICING AEW RAF
+3711,SERVICING AEW RAF
+3712,SERVICING AEW RAF
+3713,SERVICING AEW RAF
+3714,SERVICING AEW RAF
+3715,SERVICING AEW RAF
+3716,SERVICING AEW RAF
+3717,SERVICING AEW RAF
+3701,RAF Brize Norton
+3702,RAF Brize Norton
+3703,RAF Brize Norton
+3704,RAF Brize Norton
+3705,RAF Brize Norton
+3706,RAF Brize Norton
+3707,RAF Brize Norton
+3708,RAF Brize Norton
+3709,RAF Brize Norton
+3710,RAF Brize Norton
+3711,RAF Brize Norton
+3712,RAF Brize Norton
+3713,RAF Brize Norton
+3714,RAF Brize Norton
+3715,RAF Brize Norton
+3716,RAF Brize Norton
+3717,RAF Brize Norton
+3718,RAF Brize Norton
+3719,RAF Brize Norton
+3720,RAF Brize Norton
+3721,RAF Brize Norton
+3722,RAF Brize Norton
+3723,RAF Brize Norton
+3724,RAF Brize Norton
+3725,RAF Brize Norton
+3726,RAF Brize Norton
+3727,RAF Brize Norton
+3728,RAF Brize Norton
+3729,RAF Brize Norton
+3730,RAF Brize Norton
+3731,RAF Brize Norton
+3732,RAF Brize Norton
+3733,RAF Brize Norton
+3734,RAF Brize Norton
+3735,RAF Brize Norton
+3736,RAF Brize Norton
+3701,ATC Guernsey
+3702,ATC Guernsey
+3703,ATC Guernsey
+3704,ATC Guernsey
+3705,ATC Guernsey
+3706,ATC Guernsey
+3707,ATC Guernsey
+3708,ATC Guernsey
+3709,ATC Guernsey
+3710,ATC Guernsey
+3711,ATC Guernsey
+3712,ATC Guernsey
+3713,ATC Guernsey
+3714,ATC Guernsey
+3715,ATC Guernsey
+3716,ATC Guernsey
+3717,ATC Guernsey
+3718,ATC Guernsey
+3719,ATC Guernsey
+3720,ATC Guernsey
+3721,ATC Guernsey
+3722,ATC Guernsey
+3723,ATC Guernsey
+3724,ATC Guernsey
+3725,ATC Guernsey
+3726,ATC Guernsey
+3727,ATC Guernsey
+3701,RAF Lossiemouth
+3702,RAF Lossiemouth
+3703,RAF Lossiemouth
+3704,RAF Lossiemouth
+3705,RAF Lossiemouth
+3706,RAF Lossiemouth
+3707,RAF Lossiemouth
+3708,RAF Lossiemouth
+3709,RAF Lossiemouth
+3710,RAF Lossiemouth
+3711,RAF Lossiemouth
+3712,RAF Lossiemouth
+3713,RAF Lossiemouth
+3714,RAF Lossiemouth
+3715,RAF Lossiemouth
+3716,RAF Lossiemouth
+3717,RAF Lossiemouth
+3718,RAF Lossiemouth
+3719,RAF Lossiemouth
+3720,RAF Lossiemouth
+3721,RAF Lossiemouth
+3722,RAF Lossiemouth
+3723,RAF Lossiemouth
+3724,RAF Lossiemouth
+3725,RAF Lossiemouth
+3726,RAF Lossiemouth
+3727,RAF Lossiemouth
+3728,RAF Lossiemouth
+3729,RAF Lossiemouth
+3730,RAF Lossiemouth
+3731,RAF Lossiemouth
+3732,RAF Lossiemouth
+3733,RAF Lossiemouth
+3734,RAF Lossiemouth
+3735,RAF Lossiemouth
+3736,RAF Lossiemouth
+3737,RAF Lossiemouth
+3738,RAF Lossiemouth
+3739,RAF Lossiemouth
+3740,RAF Lossiemouth
+3741,RAF Lossiemouth
+3742,RAF Lossiemouth
+3743,RAF Lossiemouth
+3744,RAF Lossiemouth
+3745,RAF Lossiemouth
+3746,RAF Lossiemouth
+3747,RAF Lossiemouth
+3748,RAF Lossiemouth
+3749,RAF Lossiemouth
+3750,RAF Lossiemouth
+3751,RAF Lossiemouth
+3752,RAF Lossiemouth
+3753,RAF Lossiemouth
+3754,RAF Lossiemouth
+3755,RAF Lossiemouth
+3756,RAF Lossiemouth
+3757,RAF Lossiemouth
+3758,RAF Lossiemouth
+3759,RAF Lossiemouth
+3760,RAF Lossiemouth
+3761,RAF Lossiemouth
+3762,RAF Lossiemouth
+3763,RAF Lossiemouth
+3764,RAF Lossiemouth
+3765,RAF Lossiemouth
+3766,RAF Lossiemouth
+3767,RAF Lossiemouth
+3720,RAF Valley
+3721,RAF Valley
+3722,RAF Valley
+3723,RAF Valley
+3724,RAF Valley
+3725,RAF Valley
+3726,RAF Valley
+3727,RAF Valley
+3720,RAF Wittering
+3721,RAF Wittering
+3722,RAF Wittering
+3723,RAF Wittering
+3724,RAF Wittering
+3725,RAF Wittering
+3726,RAF Wittering
+3727,RAF Wittering
+3720,ATC Newcastle
+3721,ATC Newcastle
+3722,ATC Newcastle
+3723,ATC Newcastle
+3724,ATC Newcastle
+3725,ATC Newcastle
+3726,ATC Newcastle
+3727,ATC Newcastle
+3728,ATC Newcastle
+3729,ATC Newcastle
+3730,ATC Newcastle
+3731,ATC Newcastle
+3732,ATC Newcastle
+3733,ATC Newcastle
+3734,ATC Newcastle
+3735,ATC Newcastle
+3736,ATC Newcastle
+3737,ATC Newcastle
+3738,ATC Newcastle
+3739,ATC Newcastle
+3740,ATC Newcastle
+3741,ATC Newcastle
+3742,ATC Newcastle
+3743,ATC Newcastle
+3744,ATC Newcastle
+3745,ATC Newcastle
+3746,ATC Newcastle
+3747,ATC Newcastle
+3748,ATC Newcastle
+3749,ATC Newcastle
+3750,ATC Newcastle
+3751,ATC Newcastle
+3752,ATC Newcastle
+3753,ATC Newcastle
+3754,ATC Newcastle
+3755,ATC Newcastle
+3756,ATC Newcastle
+3757,ATC Newcastle
+3758,ATC Newcastle
+3759,ATC Newcastle
+3760,ATC Newcastle
+3761,ATC Newcastle
+3762,ATC Newcastle
+3763,ATC Newcastle
+3764,ATC Newcastle
+3765,ATC Newcastle
+3766,ATC Newcastle
+3727,RAF LARS/CTR Brize Norton
+3730,RAF Valley
+3731,RAF Valley
+3732,RAF Valley
+3733,RAF Valley
+3734,RAF Valley
+3735,RAF Valley
+3736,RAF Valley
+3730,RAF PRACTICE Wittering
+3731,RAF PRACTICE Wittering
+3732,RAF PRACTICE Wittering
+3733,RAF PRACTICE Wittering
+3734,RAF PRACTICE Wittering
+3735,RAF PRACTICE Wittering
+3736,RAF PRACTICE Wittering
+3737,RAF PRACTICE Wittering
+3738,RAF PRACTICE Wittering
+3739,RAF PRACTICE Wittering
+3740,RAF PRACTICE Wittering
+3741,RAF PRACTICE Wittering
+3742,RAF PRACTICE Wittering
+3743,RAF PRACTICE Wittering
+3744,RAF PRACTICE Wittering
+3745,RAF PRACTICE Wittering
+3746,RAF PRACTICE Wittering
+3747,RAF PRACTICE Wittering
+3737,RAF VISUAL RECOVERY Valley
+3737,RAF CONSPICUITY Brize Norton
+3737,CAS Newcastle
+3740,RAF Brize Norton
+3741,RAF Brize Norton
+3742,RAF Brize Norton
+3743,RAF Brize Norton
+3744,RAF Brize Norton
+3745,RAF Brize Norton
+3740,RAF Valley
+3741,RAF Valley
+3742,RAF Valley
+3743,RAF Valley
+3744,RAF Valley
+3745,RAF Valley
+3746,RAF Valley
+3747,RAF Valley
+3750,RAF CONSPICUITY Wittering
+3750,RAF GENERAL Valley
+3751,RAF GENERAL Valley
+3750,ATC Gatwick
+3751,ATC Gatwick
+3752,ATC Gatwick
+3753,ATC Gatwick
+3754,ATC Gatwick
+3755,ATC Gatwick
+3756,ATC Gatwick
+3757,ATC Gatwick
+3758,ATC Gatwick
+3759,ATC Gatwick
+3760,ATC Gatwick
+3761,ATC Gatwick
+3751,RAF Wittering
+3752,RAF Wittering
+3753,RAF Wittering
+3754,RAF Wittering
+3755,RAF Wittering
+3756,RAF Wittering
+3757,RAF Wittering
+3752,RAF RIFA
+3753,RAF LOW-LEVEL Valley
+3754,RAF SPECIAL Valley
+3755,RAF PRACTICE Valley
+3756,RAF PRACTICE Valley
+3757,RAF Mona
+3760,RAF Wittering
+3760,RAF GENERAL Valley
+3761,RAF GENERAL Valley
+3762,RAF GENERAL Valley
+3763,RAF GENERAL Valley
+3764,RAF GENERAL Valley
+3765,RAF GENERAL Valley
+3761,RAF VFR Wittering / Cranwell
+3762,ATC IFR Shoreham
+3762,RAF Wittering
+3763,ATC Shoreham VFR
+3764,ATC Gatwick
+3765,ATC Gatwick
+3766,ATC Gatwick
+3767,ATC CONSPICUITY Redhill
+3767,ATC CONSPICUITY Newcastle
+3770,ATC West-England
+3771,ATC West-England
+3772,ATC West-England
+3773,ATC West-England
+3774,ATC West-England
+3775,ATC West-England
+3776,ATC West-England
+3777,ATC West-England

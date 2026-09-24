@@ -1,0 +1,77 @@
+---
+- name: Deploy Docker Image
+  hosts: app_servers
+
+  tasks:
+    - name: Read compose file
+      ansible.builtin.slurp:
+        src: "{{ compose_dir }}/compose.yaml"
+      register: compose_raw
+
+    - name: Parse compose file
+      ansible.builtin.set_fact:
+        compose_config: "{{ compose_raw.content | b64decode | from_yaml }}"
+
+    - name: Determine container name from compose file
+      ansible.builtin.set_fact:
+        container_name: "{{ compose_config.services[service_name].container_name | default(service_name) }}"
+
+    - name: Record currently running tag (for rollback)
+      ansible.builtin.shell: |
+        set -o pipefail
+        docker inspect {{ container_name }} --format '{{ "{{" }}.Config.Image{{ "}}" }}' 2>/dev/null | cut -d: -f2 || echo none
+      args:
+        executable: "{{ ansible_shell_executable | default('/bin/bash') }}"
+      register: previous_tag
+      changed_when: false
+
+    - name: Persist previous tag for rollback.yml
+      ansible.builtin.copy:
+        content: "{{ previous_tag.stdout }}"
+        dest: "{{ compose_dir }}/.previous_tag"
+      when: previous_tag.stdout != "none"
+
+    - name: Clear any stale previous tag (nothing was running)
+      ansible.builtin.file:
+        path: "{{ compose_dir }}/.previous_tag"
+        state: absent
+      when: previous_tag.stdout == "none"
+
+    - name: Log in to registry
+      community.docker.docker_login:
+        registry_url: "{{ registry }}"
+        username: "{{ registry_user }}"
+        password: "{{ lookup('env', 'registry_password') }}"
+      no_log: true
+
+    - name: Pull new image
+      ansible.builtin.command:
+        cmd: docker pull "{{ registry }}/{{ image_repo }}:{{ image_tag }}"
+      changed_when: true
+
+    - name: Point compose at the new tag
+      ansible.builtin.lineinfile:
+        path: "{{ compose_dir }}/.env"
+        regexp: '^IMAGE_TAG='
+        line: "IMAGE_TAG={{ image_tag }}"
+        create: true
+
+    - name: Recreate service
+      ansible.builtin.command:
+        cmd: docker compose up -d --no-deps --force-recreate {{ service_name }}
+        chdir: "{{ compose_dir }}"
+
+    - name: Wait for health check
+      ansible.builtin.uri:
+        url: "{{ health_url }}"
+        status_code: 200
+      register: health_result
+      retries: 10
+      delay: 3
+      until: health_result.status == 200
+      ignore_errors: true
+
+    - name: Fail if unhealthy
+      ansible.builtin.fail:
+        msg: "Health check failed after deploying {{ image_tag }} — the n8n pipeline will trigger the rollback Semaphore task"
+      when: health_result.status is not defined or health_result.status != 200

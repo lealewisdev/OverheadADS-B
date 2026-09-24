@@ -1,0 +1,34 @@
+---
+- name: Rollback Docker Image
+  hosts: app_servers
+
+  tasks:
+    - name: Check previous tag file exists
+      ansible.builtin.stat:
+        path: "{{ compose_dir }}/.previous_tag"
+      register: prev_tag_file
+
+    - name: Fail if no previous tag was recorded
+      ansible.builtin.fail:
+        msg: "No {{ compose_dir }}/.previous_tag file found — there is no known-good tag to roll back to (was this the first-ever deploy?)."
+      when: not prev_tag_file.stat.exists
+
+    - name: Read previous tag
+      ansible.builtin.slurp:
+        src: "{{ compose_dir }}/.previous_tag"
+      register: prev_tag_raw
+
+    - name: Set previous tag fact
+      ansible.builtin.set_fact:
+        previous_tag: "{{ prev_tag_raw['content'] | b64decode | trim }}"
+
+    - name: Point compose back at the previous tag
+      ansible.builtin.lineinfile:
+        path: "{{ compose_dir }}/.env"
+        regexp: '^IMAGE_TAG='
+        line: "IMAGE_TAG={{ previous_tag }}"
+
+    - name: Recreate service on previous tag
+      ansible.builtin.command:
+        cmd: docker compose up -d --no-deps --force-recreate {{ service_name }}
+        chdir: "{{ compose_dir }}"

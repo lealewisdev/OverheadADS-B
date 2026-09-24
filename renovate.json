@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "semanticCommits": "enabled",
+  "pre-commit": {
+    "enabled": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on monday"]
+  },
+  "packageRules": [
+    {
+      "description": "Pin every container image by digest",
+      "matchDatasources": ["docker"],
+      "pinDigests": true
+    },
+    {
+      "description": "Keep the uv image and the uv_build backend moving together",
+      "matchPackageNames": ["uv_build", "dhi.io/uv", "ghcr.io/astral-sh/uv"],
+      "groupName": "uv"
+    }
+  ]
+}

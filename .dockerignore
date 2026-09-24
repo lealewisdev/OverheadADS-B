@@ -1,0 +1,16 @@
+__pycache__
+.pytest_cache
+*.pyc
+*.pyo
+.git
+.forgejo
+.gitignore
+.dockerignore
+.venv
+.ruff_cache
+.env
+.previous_tag
+ansible
+rainmeter
+README.md
+compose.yaml

@@ -1,0 +1,88 @@
+---
+name: Scan Latest Image
+"on":
+  schedule:
+    - cron: "0 4 * * *"
+      timezone: Europe/London
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  REGISTRY: ${{ vars.REGISTRY }}
+  IMAGE_REF: ${{ vars.REGISTRY }}/${{ github.repository }}:latest
+jobs:
+  scan-images:
+    runs-on: docker
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        # v7.0.1
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Log In To Registry
+        env:
+          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          printf '%s' "$REGISTRY_TOKEN" | docker login "$REGISTRY" \
+            -u "$REGISTRY_USER" --password-stdin
+
+      - name: Pull Published Image
+        run: docker pull "$IMAGE_REF"
+
+      - name: Get Trivy DB Cache Key Date
+        id: trivy-date
+        run: echo "date=$(date -u +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Trivy DB
+        # v6.1.0
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ~/.cache/trivy
+          key: trivy-db-${{ runner.os }}-${{ steps.trivy-date.outputs.date }}
+          restore-keys: |
+            trivy-db-${{ runner.os }}-
+
+      - name: Scan Published Image
+        run: |
+          trivy image \
+            --cache-dir ~/.cache/trivy \
+            --exit-code 1 \
+            --ignore-unfixed \
+            --severity CRITICAL,HIGH \
+            --ignorefile packaging/.trivyignore \
+            "$IMAGE_REF"
+
+      - name: Log Out Of Registry
+        if: always()
+        run: docker logout "$REGISTRY"
+
+      - name: Notify n8n
+        if: '!cancelled()'
+        continue-on-error: true
+        env:
+          N8N_WEBHOOK_URL: ${{ secrets.N8N_WEBHOOK_URL }}
+          N8N_WEBHOOK_TOKEN: ${{ secrets.N8N_WEBHOOK_TOKEN }}
+          APPRISE_URL: ${{ secrets.APPRISE_URL }}
+          REPOSITORY: ${{ github.repository }}
+          WORKFLOW: ${{ github.workflow }}
+          JOB_STATUS: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}
+            /actions/runs/${{ github.run_id }}
+        run: |
+          set -eo pipefail
+          curl \
+            --fail-with-body \
+            --show-error \
+            --silent \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "X-Webhook-Token: ${N8N_WEBHOOK_TOKEN}" \
+            -d "{
+              \"repository\":\"${REPOSITORY}\",\"workflow\":\"${WORKFLOW}\",
+              \"run_url\":\"${RUN_URL}\",\"status\":\"${JOB_STATUS}\",
+              \"apprise_url\":\"${APPRISE_URL}\"
+            }" \
+            "$N8N_WEBHOOK_URL"

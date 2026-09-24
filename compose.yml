@@ -1,0 +1,33 @@
+name: overheadadsb
+
+services:
+  overheadadsb:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: overheadadsb
+    environment:
+      TZ: ${TZ}
+      LAT: ${LAT}
+      LON: ${LON}
+      RAD_NM: ${RAD_NM}
+      POLL_INT: ${POLL_INT}
+      PORT: ${PORT}
+      OWNER_POLL_CACHE_MAX: ${OWNER_POLL_CACHE_MAX}
+    networks:
+      - traefik
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.overheadadsb.rule=Host(`overheadadsb.${DOMAIN}`)"
+      - "traefik.http.routers.overheadadsb.entrypoints=websecure"
+      - "traefik.http.services.overheadadsb.loadbalancer.server.port=${PORT}"
+
+networks:
+  traefik:
+    external: true

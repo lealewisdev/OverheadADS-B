@@ -1,0 +1,112 @@
+---
+name: PR Checks
+"on":
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  hadolint:
+    runs-on: docker
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        # v7.0.1
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Lint Dockerfiles
+        run: |
+          STATUS=0
+          while IFS= read -r -d '' file; do
+            echo "::group::$file"
+            hadolint "$file" || STATUS=1
+            echo "::endgroup::"
+          done < <(
+            find . -type f \
+              \( -name 'Dockerfile' \
+              -o -name 'Dockerfile.*' \
+              -o -name '*.Dockerfile' \) \
+              -print0
+          )
+          exit $STATUS
+
+  dclint:
+    runs-on: docker
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        # v7.0.1
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Lint Compose Files
+        # v1.6.0
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/docker-compose-linter/dclint-github-action@18659f6a7956706cb67cf9c1ad5e55f4352cbc17
+        with:
+          path: ./
+          recursive: true
+
+  trufflehog:
+    runs-on: docker
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        # v7.0.1
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Scan For Secrets
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          trufflehog git file://. \
+            --since-commit "$BASE_SHA" \
+            --only-verified \
+            --fail
+
+  renovate-config:
+    runs-on: docker
+    # yamllint disable-line rule:line-length
+    container: renovate/renovate:44.52@sha256:778ff1b404d79ef7763f0c904ebb279a4138ffc1017181ad076b1648e37f6dbd
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        # v7.0.1
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Validate Renovate config
+        run: renovate-config-validator --strict
+
+  test:
+    runs-on: docker
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        # v7.0.1
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Log In To dhi.io
+        env:
+          DHI_USER: ${{ secrets.DHI_USER }}
+          DHI_TOKEN: ${{ secrets.DHI_TOKEN }}
+        run: |
+          printf '%s' "$DHI_TOKEN" | docker login dhi.io \
+            -u "$DHI_USER" --password-stdin
+
+      - name: Lint, Type Check & Test
+        run: |
+          docker buildx inspect forgejo-builder >/dev/null 2>&1 || \
+            docker buildx create --name forgejo-builder --use
+          docker buildx build --target test .
+
+      - name: Log Out Of dhi.io
+        if: always()
+        run: docker logout dhi.io
