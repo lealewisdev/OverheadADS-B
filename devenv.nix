@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 {
   languages.python = {
@@ -18,6 +18,9 @@
     pkgs.trivy
     pkgs.updatecli
   ];
+
+  config.secretspec.secrets.DHI_USER
+  config.secretspec.secrets.DHI_TOKEN
 
   enterShell = ''
     export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/docker.sock"
