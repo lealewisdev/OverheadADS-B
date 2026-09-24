@@ -7,6 +7,10 @@ name: PR Checks
 permissions:
   contents: read
 
+env:
+  REGISTRY: ${{ vars.REGISTRY }}
+  IMAGE: ${{ vars.REGISTRY }}/${{ github.repository }}
+
 jobs:
   hadolint:
     runs-on: docker
@@ -43,7 +47,6 @@ jobs:
         uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Lint Compose Files
-        # v1.6.0
         # yamllint disable-line rule:line-length
         uses: https://github.com/docker-compose-linter/dclint-github-action@18659f6a7956706cb67cf9c1ad5e55f4352cbc17
         with:
@@ -93,6 +96,14 @@ jobs:
         # yamllint disable-line rule:line-length
         uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
+      - name: Log In To Registry
+        env:
+          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          printf '%s' "$REGISTRY_TOKEN" | docker login "$REGISTRY" \
+            -u "$REGISTRY_USER" --password-stdin
+
       - name: Log In To dhi.io
         env:
           DHI_USER: ${{ secrets.DHI_USER }}
@@ -100,6 +111,19 @@ jobs:
         run: |
           printf '%s' "$DHI_TOKEN" | docker login dhi.io \
             -u "$DHI_USER" --password-stdin
+
+      - name: Build Image
+        run: |
+          docker buildx inspect forgejo-builder >/dev/null 2>&1 || \
+            docker buildx create --name forgejo-builder --use
+          docker buildx build \
+            --pull \
+            --platform linux/amd64 \
+            --target runtime \
+            --cache-from "type=registry,ref=${IMAGE}:buildcache" \
+            -t pr-scan:local \
+            --load \
+            .
 
       - name: Lint, Type Check & Test
         run: |
@@ -110,3 +134,32 @@ jobs:
       - name: Log Out Of dhi.io
         if: always()
         run: docker logout dhi.io
+
+      - name: Log Out Of Registry
+        if: always()
+        run: docker logout "$REGISTRY"
+
+      - name: Get Trivy DB Cache Key Date
+        id: trivy-date
+        run: echo "date=$(date -u +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Trivy DB
+        # v6.1.0
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ~/.cache/trivy
+          key: trivy-db-${{ runner.os }}-${{ steps.trivy-date.outputs.date }}
+          restore-keys: |
+            trivy-db-${{ runner.os }}-
+
+      - name: Scan Image
+        run: |
+          trivy image \
+            --cache-dir ~/.cache/trivy \
+            --scanners vuln \
+            --exit-code 1 \
+            --ignore-unfixed \
+            --severity CRITICAL,HIGH \
+            --ignorefile packaging/.trivyignore \
+            pr-scan:local

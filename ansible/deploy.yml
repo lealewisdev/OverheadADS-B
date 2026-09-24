@@ -3,40 +3,6 @@
   hosts: app_servers
 
   tasks:
-    - name: Read compose file
-      ansible.builtin.slurp:
-        src: "{{ compose_dir }}/compose.yaml"
-      register: compose_raw
-
-    - name: Parse compose file
-      ansible.builtin.set_fact:
-        compose_config: "{{ compose_raw.content | b64decode | from_yaml }}"
-
-    - name: Determine container name from compose file
-      ansible.builtin.set_fact:
-        container_name: "{{ compose_config.services[service_name].container_name | default(service_name) }}"
-
-    - name: Record currently running tag (for rollback)
-      ansible.builtin.shell: |
-        set -o pipefail
-        docker inspect {{ container_name }} --format '{{ "{{" }}.Config.Image{{ "}}" }}' 2>/dev/null | cut -d: -f2 || echo none
-      args:
-        executable: "{{ ansible_shell_executable | default('/bin/bash') }}"
-      register: previous_tag
-      changed_when: false
-
-    - name: Persist previous tag for rollback.yml
-      ansible.builtin.copy:
-        content: "{{ previous_tag.stdout }}"
-        dest: "{{ compose_dir }}/.previous_tag"
-      when: previous_tag.stdout != "none"
-
-    - name: Clear any stale previous tag (nothing was running)
-      ansible.builtin.file:
-        path: "{{ compose_dir }}/.previous_tag"
-        state: absent
-      when: previous_tag.stdout == "none"
-
     - name: Log in to registry
       community.docker.docker_login:
         registry_url: "{{ registry }}"
@@ -75,3 +41,42 @@
       ansible.builtin.fail:
         msg: "Health check failed after deploying {{ image_tag }} — the n8n pipeline will trigger the rollback Semaphore task"
       when: health_result.status is not defined or health_result.status != 200
+
+    # ---- Everything below only runs if the deploy is healthy ----
+
+    - name: Save deployed image to temp tarball
+      ansible.builtin.command:
+        cmd: docker save -o {{ compose_dir }}/last_good.tar.tmp {{ registry }}/{{ image_repo }}:{{ image_tag }}
+      changed_when: true
+
+    - name: Verify temp tarball is readable
+      ansible.builtin.command:
+        cmd: tar -tf {{ compose_dir }}/last_good.tar.tmp
+      changed_when: false
+
+    - name: Replace last-good tarball atomically
+      ansible.builtin.command:
+        cmd: mv -f {{ compose_dir }}/last_good.tar.tmp {{ compose_dir }}/last_good.tar
+      changed_when: true
+
+    - name: Record this tag as last known-good
+      ansible.builtin.copy:
+        content: "{{ image_tag }}\n"
+        dest: "{{ compose_dir }}/.last_good_tag"
+
+    - name: Move the last-good pointer tag onto this image (local)
+      ansible.builtin.command:
+        cmd: docker tag "{{ registry }}/{{ image_repo }}:{{ image_tag }}" "{{ registry }}/{{ image_repo }}:last-good"
+      changed_when: true
+
+    - name: Push last-good tag to the registry (protected by the Forgejo cleanup rule)
+      ansible.builtin.command:
+        cmd: docker push "{{ registry }}/{{ image_repo }}:last-good"
+      changed_when: true
+      register: last_good_push
+      ignore_errors: true
+
+    - name: Warn if last-good push failed
+      ansible.builtin.debug:
+        msg: "WARNING: deploy of {{ image_tag }} is healthy and saved to last_good.tar, but pushing :last-good to the registry failed. The registry copy is stale until the next successful deploy."
+      when: last_good_push is failed

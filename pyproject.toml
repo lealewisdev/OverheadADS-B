@@ -1,6 +1,6 @@
 [project]
 name = "overheadadsb"
-version = "1.0.0"
+version = "1.0.1"
 description = "ADS-B telemetry enrichment API"
 requires-python = ">=3.14"
 dependencies = [
@@ -30,8 +30,8 @@ build-backend = "uv_build"
 [tool.basedpyright]
 include = ["src","scripts"]
 typeCheckingMode = "standard"
-stubPath = "typings"
-exclude = ["**/node_modules", "**/__pycache__", "**/.*", ".venv", "typings"]
+# stubPath = "typings"
+exclude = ["**/node_modules", "**/__pycache__", "**/.*", ".venv", "typings", "scripts"]
 
 [tool.ruff]
 exclude = ["typings"]

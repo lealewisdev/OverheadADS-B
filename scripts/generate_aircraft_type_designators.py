@@ -80,25 +80,23 @@ async def scrape_aircraft(browser: nd.Browser, endpoint: str) -> list[Row]:
     return [data]
 
 
-async def scrape_all(endpoints: list[str]) -> list[Row]:
+async def main() -> list[Row]:
+    # get_sitemap()
+    endpoints = parse_xml("sitemap.xml")
     browser = await nd.start(headless=True)
+
     rows: list[Row] = []
     for index, endpoint in enumerate(endpoints):
         rows.extend(await scrape_aircraft(browser, endpoint))
         print(index)
+
     return rows
 
 
-def main() -> None:
-    # get_sitemap()
-    endpoints = parse_xml("sitemap.xml")
-    rows = nd.loop().run_until_complete(scrape_all(endpoints))
+if __name__ == "__main__":
+    all_rows = nd.loop().run_until_complete(main())
 
     with open("icao.csv", "w", newline="", encoding="utf-8") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=KEYS)
         writer.writeheader()
-        writer.writerows(rows)
-
-
-if __name__ == "__main__":
-    main()
+        writer.writerows(all_rows)

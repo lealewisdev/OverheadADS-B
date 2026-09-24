@@ -1,42 +1,18 @@
-# Virtual environment
-.venv/
-
-# Python cache
-__pycache__/
-*.py[cod]
-*.so
-
-# Test / coverage
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Build artifacts
-dist/
-build/
-*.egg-info/
-
-# IDE
-.vscode/
-.idea/
-
-# OS
-.DS_Store
+# Python caches / compiled files
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache
 .ruff_cache
-.previous_tag
+src/overheadadsb/__pychache__
 
-# Local config
+# Virtual environments
+.venv
+
+# Environment / local configuration
 .env
 .env.*
 !.env.example
-
-# Devenv
-.devenv*
-devenv.local.nix
-devenv.local.yaml
-
-# direnv
-.direnv
-
-# pre-commit
-.pre-commit-config.yaml
+.last_good_tag
+last_good.tar
+.devenv

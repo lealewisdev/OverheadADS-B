@@ -17,5 +17,3 @@ FR24_URL = "https://www.flightradar24.com/data/aircraft"
 
 SQUAWKS_CSV = "src/overheadadsb/data/uk_squawk_codes.csv"
 ICAO_CSV = "src/overheadadsb/data/aircraft_type_designators_helicopter.csv"
-
-PORT = int(os.getenv("PORT", "8003"))

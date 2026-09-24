@@ -1,16 +1,42 @@
+# Python caches / compiled files
 __pycache__
-.pytest_cache
 *.pyc
 *.pyo
+.pytest_cache
+.ruff_cache
+src/overheadadsb/__pychache__
+
+# Virtual environments
+.venv
+.devenv*
+
+# Environment / local configuration
+.env
+.config
+.last_good_tag
+last_good.tar
+
+# Version control
 .git
 .forgejo
 .gitignore
+
+# Docker / Compose
 .dockerignore
-.venv
-.ruff_cache
-.env
-.previous_tag
-ansible
-rainmeter
-README.md
 compose.yaml
+
+# Ansible
+ansible
+.ansible
+
+# Development / tooling
+scripts
+typings
+clients
+prek.toml
+renovate.json
+prune-trivyignore.sh
+nfpm.yaml
+
+# Documentation / project metadata
+README.md

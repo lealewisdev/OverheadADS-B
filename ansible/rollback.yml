@@ -3,32 +3,85 @@
   hosts: app_servers
 
   tasks:
-    - name: Check previous tag file exists
+    - name: Check last-good-tag file exists
       ansible.builtin.stat:
-        path: "{{ compose_dir }}/.previous_tag"
+        path: "{{ compose_dir }}/.last_good_tag"
       register: prev_tag_file
 
-    - name: Fail if no previous tag was recorded
+    - name: Fail if no last-good tag was recorded
       ansible.builtin.fail:
-        msg: "No {{ compose_dir }}/.previous_tag file found — there is no known-good tag to roll back to (was this the first-ever deploy?)."
+        msg: "No {{ compose_dir }}/.last_good_tag file found — there is no known-good tag to roll back to (was this the first-ever deploy?)."
       when: not prev_tag_file.stat.exists
 
-    - name: Read previous tag
+    - name: Read last-good tag
       ansible.builtin.slurp:
-        src: "{{ compose_dir }}/.previous_tag"
+        src: "{{ compose_dir }}/.last_good_tag"
       register: prev_tag_raw
 
     - name: Set previous tag fact
       ansible.builtin.set_fact:
         previous_tag: "{{ prev_tag_raw['content'] | b64decode | trim }}"
 
+    - name: Check last-good tarball exists
+      ansible.builtin.stat:
+        path: "{{ compose_dir }}/last_good.tar"
+      register: last_good_tar
+
+    - name: Load image from tarball
+      ansible.builtin.command:
+        cmd: docker load -i {{ compose_dir }}/last_good.tar
+      register: tar_load
+      changed_when: true
+      ignore_errors: true
+      when: last_good_tar.stat.exists
+
+    - name: Fall back to registry last-good
+      when: not last_good_tar.stat.exists or tar_load is failed
+      block:
+        - name: Warn that the tarball could not be used
+          ansible.builtin.debug:
+            msg: "WARNING: {{ compose_dir }}/last_good.tar is missing or failed to load — falling back to {{ registry }}/{{ image_repo }}:last-good from the registry."
+
+        - name: Log in to registry
+          community.docker.docker_login:
+            registry_url: "{{ registry }}"
+            username: "{{ registry_user }}"
+            password: "{{ lookup('env', 'registry_password') }}"
+          no_log: true
+
+        - name: Pull last-good from registry
+          ansible.builtin.command:
+            cmd: docker pull "{{ registry }}/{{ image_repo }}:last-good"
+          changed_when: true
+
+        - name: Retag as the recorded version tag
+          ansible.builtin.command:
+            cmd: docker tag "{{ registry }}/{{ image_repo }}:last-good" "{{ registry }}/{{ image_repo }}:{{ previous_tag }}"
+          changed_when: true
+
     - name: Point compose back at the previous tag
       ansible.builtin.lineinfile:
         path: "{{ compose_dir }}/.env"
         regexp: '^IMAGE_TAG='
         line: "IMAGE_TAG={{ previous_tag }}"
+        create: true
 
     - name: Recreate service on previous tag
       ansible.builtin.command:
-        cmd: docker compose up -d --no-deps --force-recreate {{ service_name }}
+        cmd: docker compose up -d --no-deps --force-recreate --pull never {{ service_name }}
         chdir: "{{ compose_dir }}"
+
+    - name: Wait for health check after rollback
+      ansible.builtin.uri:
+        url: "{{ health_url }}"
+        status_code: 200
+      register: health_result
+      retries: 10
+      delay: 3
+      until: health_result.status == 200
+      ignore_errors: true
+
+    - name: Fail if rollback is also unhealthy
+      ansible.builtin.fail:
+        msg: "Rollback to {{ previous_tag }} also failed its health check — manual intervention required, no automatic fallback exists."
+      when: health_result.status is not defined or health_result.status != 200

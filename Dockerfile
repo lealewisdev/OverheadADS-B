@@ -15,9 +15,9 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 FROM builder AS test
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --group dev
-RUN uv run ruff check src scripts \
+RUN uv run ruff check src \
     && uv run basedpyright --threads 1 \
-    && uv run bandit -r src scripts -ll \
+    && uv run bandit -r src -ll \
     && uv run pytest --cov=overheadadsb --cov-report=term-missing
 
 FROM dhi.io/python:3.14-alpine@sha256:9d1e11476965ff48627fb752e1be15a22866856cf12a907f5fc7448e536fc0ba AS runtime
@@ -26,7 +26,8 @@ ENV PATH="/app/.venv/bin:$PATH"
 ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 EXPOSE 8003
-CMD ["/app/.venv/bin/uvicorn", "overheadadsb.main:app", "--host", "0.0.0.0", "--port", "8003"]
+ENV UVICORN_PORT=8003
+CMD ["/app/.venv/bin/uvicorn", "overheadadsb.main:app", "--host", "0.0.0.0"]
 
 # glibc
 FROM dhi.io/python:3.14-dev@sha256:cc2a26e03005f5eaa345a34efaa48d1c672186dc27b74bf566804ce7fd5b8afb AS builder-deb

@@ -8,12 +8,12 @@ Scope {
       anchors { top: true; left: true; right: true }
       implicitHeight: 30
 
-      ABSBWidget {
+      ADSBWidget {
         anchors.right: parent.right
         anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
         displayText: ADSB.displayText
-        hasError: ABSD.hasError
+        hasError: ADSB.hasError
       }
     }
   }

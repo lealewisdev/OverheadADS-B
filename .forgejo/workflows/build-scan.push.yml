@@ -32,6 +32,9 @@ jobs:
         # yamllint disable-line rule:line-length
         uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
+      - name: Check uv.lock Is In Sync
+        run: uv lock --check
+
       - name: Log In To dhi.io
         env:
           DHI_USER: ${{ secrets.DHI_USER }}
@@ -217,12 +220,16 @@ jobs:
             -H "Content-Type: application/json" \
             -H "X-Webhook-Token: ${N8N_WEBHOOK_TOKEN}" \
             -d "{
-              \"repository\":\"${REPOSITORY}\",\"triggered_by\":\"${EVENT_NAME}\",
-              \"workflow\":\"${WORKFLOW}\",\"run_url\":\"${RUN_URL}\",
-              \"status\":\"success\",\"image_tag\":\"${IMAGE_SHA}\",
-              \"semver\":\"${SEMVER}\",\"semaphore_url\":\"${SEMAPHORE_URL}\",\"semaphore_project_id\":${SEMAPHORE_PROJECT_ID},
-              \"semaphore_deploy_template_id\":${SEMAPHORE_DEPLOY_TEMPLATE_ID},\"semaphore_rollback_template_id\":${SEMAPHORE_ROLLBACK_TMPL_ID},
-              \"apprise_url\":\"${APPRISE_URL}\"
+              \"repository\":\"${REPOSITORY}\",
+              \"triggered_by\":\"${EVENT_NAME}\",\"workflow\":\"${WORKFLOW}\",
+              \"run_url\":\"${RUN_URL}\",\"status\":\"success\",
+              \"image_tag\":\"${IMAGE_SHA}\",\"semver\":\"${SEMVER}\",
+              \"semaphore_url\":\"${SEMAPHORE_URL}\",
+              \"semaphore_project_id\":${SEMAPHORE_PROJECT_ID},
+              \"semaphore_deploy_template_id\":${SEMAPHORE_DEPLOY_TEMPLATE_ID},
+              \"semaphore_rollback_template_id\":${SEMAPHORE_ROLLBACK_TMPL_ID},
+              \"apprise_url\":\"${APPRISE_URL}\",
+              \"health_url\":\"${HEALTH_URL}\"
             }" \
             "$N8N_DEPLOY_WEBHOOK_URL"
 

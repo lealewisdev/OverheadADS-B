@@ -11,23 +11,42 @@
   };
 
   packages = [
-    pkgs.git
-    pkgs.hadolint
     pkgs.prek
+    pkgs.hadolint
+    pkgs.docker
+    pkgs.docker-buildx
+    pkgs.trivy
+    pkgs.updatecli
   ];
 
+  /*
   scripts.lint.exec = "prek run --all-files";
 
-  # processes.app.exec = "docker compose up";
-
-  enterShell = ''
-    git --version
-    uv --version
-    hadolint --version
+  scripts.build-image.exec = ''
+    set -euo pipefail
+    docker buildx inspect local-builder >/dev/null 2>&1 || \
+      docker buildx create --name local-builder --use
+    docker buildx build \
+      --pull \
+      --platform linux/amd64 \
+      --target runtime \
+      --load \
+      -t overheadadsb:local \
+      .
   '';
 
-  enterTest = ''
-    uv --version
-    hadolint --version
+  scripts.scan-image.exec = ''
+    set -euo pipefail
+    trivy image \
+      --format cyclonedx \
+      --output sbom.cdx.json \
+      overheadadsb:local
+    trivy sbom \
+      --exit-code 1 \
+      --ignore-unfixed \
+      --severity CRITICAL,HIGH \
+      --ignorefile packaging/.trivyignore \
+      sbom.cdx.json
   '';
+*/
 }

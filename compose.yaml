@@ -6,6 +6,7 @@ services:
     #    Building locally is not compatible with the provided ansible playbooks
     #    build:
     #      context: ./
+    #      target: runtime
     #      dockerfile: Dockerfile
     container_name: overheadadsb
     environment:
@@ -15,22 +16,30 @@ services:
       RAD_NM: ${RAD_NM}
       POLL_INT: ${POLL_INT}
       PORT: ${PORT}
+      UVICORN_PORT: ${UVICORN_PORT}
       HTTP_TIMEOUT: ${HTTP_TIMEOUT}
       OWNER_POLL_CACHE_MAX: ${OWNER_POLL_CACHE_MAX}
-    networks:
-      - traefik
+    ports:
+      - '${HOST_IP}:8003:${PORT}/tcp'
+    #    Using a reverse proxy instead of exposing ports is recommended
+    #    networks:
+    #      - traefik
     restart: unless-stopped
     logging:
       driver: json-file
       options:
         max-size: "10m"
         max-file: "3"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.overheadadsb.rule=Host(`overheadadsb.${DOMAIN}`)"
-      - "traefik.http.routers.overheadadsb.entrypoints=websecure"
-      - "traefik.http.services.overheadadsb.loadbalancer.server.port=${PORT}"
 
-networks:
-  traefik:
-    external: true
+#    Optional traefik, grafana alloy and glannce labels
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.overheadadsb.rule=Host(`overheadadsb.${DOMAIN}`)"
+#      - "traefik.http.routers.overheadadsb.entrypoints=websecure"
+#      - "traefik.http.services.overheadadsb.loadbalancer.server.port=${PORT}"
+#      - "uptime.enable=true"
+#      - "uptime.address=https://overheadadsb.${DOMAIN}"
+# Reuse existing traefik network if applicable
+# networks:
+#  traefik:
+#    external: true

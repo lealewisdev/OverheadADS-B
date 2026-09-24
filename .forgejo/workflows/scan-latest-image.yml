@@ -55,6 +55,14 @@ jobs:
             --ignorefile packaging/.trivyignore \
             "$IMAGE_REF"
 
+      - name: Check For Stale Trivy Ignores
+        id: prune
+        if: '!cancelled()'
+        continue-on-error: true
+        run: |
+          bash packaging/prune-trivyignore.sh \
+            packaging/.trivyignore "$IMAGE_REF"
+
       - name: Log Out Of Registry
         if: always()
         run: docker logout "$REGISTRY"
