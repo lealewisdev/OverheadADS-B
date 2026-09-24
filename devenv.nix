@@ -19,6 +19,8 @@
     pkgs.updatecli
   ];
 
+  dotenv.enable = false;
+
   config.secretspec.secrets.DHI_USER
   config.secretspec.secrets.DHI_TOKEN
 
