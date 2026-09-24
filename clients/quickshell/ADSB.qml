@@ -5,7 +5,7 @@ import Quickshell.Io
 Item {
     id: root
 
-    property string apiUrl: "https://overhead.piperlab.dev/api/v1/overhead"
+    property string apiUrl: "https://overhead.mydomain.tld/api/v1/overhead"
     property int refreshIntervalMs: 5000
     property string idleText: ""
 
