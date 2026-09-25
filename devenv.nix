@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, ... }:
 
 {
   languages.python = {
@@ -22,9 +22,7 @@
     pkgs.secretspec
   ];
 
-  dotenv.enable = false;
-
-# devenv shell && secretspec run -- npm start
+#  dotenv.enable = false;
 
   enterShell = ''
     export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/docker.sock"
