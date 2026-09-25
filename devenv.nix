@@ -19,6 +19,7 @@
     pkgs.updatecli
     pkgs.sops
     pkgs.age
+    pkgs.secretspec
   ];
 
   dotenv.enable = false;
