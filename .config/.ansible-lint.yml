@@ -1,0 +1,7 @@
+# .config/.ansible-lint.yml
+---
+mock_modules:
+  - community.docker.docker_login
+
+skip_list:
+  - args[module]
