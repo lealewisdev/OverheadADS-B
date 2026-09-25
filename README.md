@@ -310,11 +310,12 @@ plus a `registry_password` environment variable.
 
 ## TODO
 
-1. Add D2 diagram
-2. Switch from FAA Order JO 7360.1J to ICAO Doc 8643 aircraft-type
+- Add D2 diagram
+- Switch from FAA Order JO 7360.1J to ICAO Doc 8643 aircraft-type
    description and generate aircraft type designators reffreences for all types
    instead of just helicopters
-3. Switch from [deeside](https://www.deeside.com/squawk-codes/) to UK
+- Switch from [deeside](https://www.deeside.com/squawk-codes/) to UK
    AIP ENR 1.6 for squawk codes
-4. Packaging with nFPM
-5. Updatecli to premt trivy failing from fixable issues
+- Packaging with nFPM
+- Updatecli to premt trivy failing from fixable issues
+- Maybe [Container Structure Tests](https://github.com/GoogleContainerTools/container-structure-test)

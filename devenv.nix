@@ -17,12 +17,13 @@
     pkgs.docker-buildx
     pkgs.trivy
     pkgs.updatecli
+    pkgs.sops
+    pkgs.age
   ];
 
   dotenv.enable = false;
 
-  config.secretspec.secrets.DHI_USER
-  config.secretspec.secrets.DHI_TOKEN
+# devenv shell && secretspec run -- npm start
 
   enterShell = ''
     export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/docker.sock"

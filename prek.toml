@@ -11,20 +11,50 @@ hooks = [
 [[repos]]
 repo = "local"
 hooks = [
-    { id = "trivy-lockfile", name = "trivy: uv.lock vulnerabilities", entry = "trivy fs --scanners vuln --skip-dirs .venv --skip-dirs .git --exit-code 1 --ignore-unfixed --severity CRITICAL,HIGH --ignorefile packaging/.trivyignore .", language = "system", pass_filenames = false, files = "^(uv\\.lock|pyproject\\.toml|packaging/\\.trivyignore)$", stages = ["pre-push"] },
+    {
+      id = "trivy-lockfile",
+      name = "trivy: uv.lock vulnerabilities",
+      entry = """\
+        trivy fs --scanners vuln --skip-dirs .venv --skip-dirs .git \
+        --exit-code 1 --ignore-unfixed --severity CRITICAL,HIGH \
+        --ignorefile packaging/.trivyignore .\
+        """,
+      language = "system",
+      pass_filenames = false,
+      files = "^(uv\\.lock|pyproject\\.toml|packaging/\\.trivyignore)$",
+      stages = ["pre-push"]
+    },
 
-    { id = "docker-test-target", name = "docker build --target test", entry = """secretspec run -- sh -euc '
-          trap "docker logout dhi.io >/dev/null 2>&1" EXIT
-          echo "$DHI_TOKEN" | docker login dhi.io -u "$DHI_USER" --password-stdin
-          docker buildx build --target test .
-        '""", language = "system", pass_filenames = false, files = "^(src/|tests/|packaging/|pyproject\\.toml|uv\\.lock|Dockerfile|\\.dockerignore|\\.python-version)", stages = ["pre-push"] },
+    {
+      id = "docker-test-target",
+      name = "docker build --target test",
+      entry = "docker buildx build --target test .",
+      language = "system",
+      pass_filenames = false,
+      files = """\
+        ^(src/|tests/|packaging/|pyproject\\.toml|uv\\.lock|\
+        Dockerfile|\\.dockerignore|\\.python-version)\
+        """,
+      stages = ["pre-push"]
+    },
 
-    { id = "trivy-image-scan", name = "build + trivy image scan (CI replica)", entry = """sh -euc '
-      sbom="$(mktemp)"
-      docker buildx build --pull --platform linux/amd64 --target runtime --load -t local/ci-scan:latest .
-      trivy image --format cyclonedx --output "$sbom" local/ci-scan:latest
-      trivy sbom --exit-code 1 --ignore-unfixed --severity CRITICAL,HIGH --ignorefile packaging/.trivyignore "$sbom"
-    '""", language = "system", pass_filenames = false, always_run = true, stages = ["manual"] },
+    {
+      id = "trivy-image-scan",
+      name = "build + trivy image scan (CI replica)",
+      entry = """\
+        sh -euc 'sbom="$(mktemp)"
+        docker buildx build --pull --platform linux/amd64 \
+          --target runtime --load -t local/ci-scan:latest .
+        trivy image --format cyclonedx --output "$sbom" local/ci-scan:latest
+        trivy sbom --exit-code 1 --ignore-unfixed \
+          --severity CRITICAL,HIGH \
+          --ignorefile packaging/.trivyignore "$sbom"'\
+        """,
+      language = "system",
+      pass_filenames = false,
+      always_run = true,
+      stages = ["manual"]
+    },
 ]
 
 [[repos]]

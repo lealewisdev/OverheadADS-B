@@ -5,5 +5,5 @@ inputs:
 
 secretspec:
   enable: true
-  provider: keyring
+  provider: sops
   profile: default
