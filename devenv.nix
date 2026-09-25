@@ -20,9 +20,14 @@
     pkgs.sops
     pkgs.age
     pkgs.secretspec
+    pkgs.typos
+    pkgs.ansible-lint
   ];
 
-#  dotenv.enable = false;
+  env.LC_ALL = "C.UTF-8";
+  env.LANG = "C.UTF-8";
+
+  scripts.lint.exec = "prek run --all-files";
 
   enterShell = ''
     export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/docker.sock"
@@ -31,8 +36,6 @@
   processes.dockerd.exec = "dockerd-rootless";
 
   /*
-  scripts.lint.exec = "prek run --all-files";
-
   scripts.build-image.exec = ''
     set -euo pipefail
     docker buildx inspect local-builder >/dev/null 2>&1 || \

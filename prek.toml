@@ -8,53 +8,61 @@ hooks = [
     { id = "check-added-large-files" },
 ]
 
+# [[repos]]
+# repo = "local"
+# hooks = [
+#     {
+#       id = "trivy-lockfile",
+#       name = "trivy: uv.lock vulnerabilities",
+#       entry = """\
+#         trivy fs --scanners vuln --skip-dirs .venv --skip-dirs .git \
+#         --exit-code 1 --ignore-unfixed --severity CRITICAL,HIGH \
+#         --ignorefile packaging/.trivyignore .\
+#         """,
+#       language = "system",
+#       pass_filenames = false,
+#       files = "^(uv\\.lock|pyproject\\.toml|packaging/\\.trivyignore)$",
+#       stages = ["pre-push"]
+#     },
+
+#     {
+#       id = "docker-test-target",
+#       name = "docker build --target test",
+#       entry = "docker buildx build --target test .",
+#       language = "system",
+#       pass_filenames = false,
+#       files = """\
+#         ^(src/|tests/|packaging/|pyproject\\.toml|uv\\.lock|\
+#         Dockerfile|\\.dockerignore|\\.python-version)\
+#         """,
+#       stages = ["pre-push"]
+#     },
+
+#     {
+#       id = "trivy-image-scan",
+#       name = "build + trivy image scan (CI replica)",
+#       entry = """\
+#         sh -euc 'sbom="$(mktemp)"
+#         docker buildx build --pull --platform linux/amd64 \
+#           --target runtime --load -t local/ci-scan:latest .
+#         trivy image --format cyclonedx --output "$sbom" local/ci-scan:latest
+#         trivy sbom --exit-code 1 --ignore-unfixed \
+#           --severity CRITICAL,HIGH \
+#           --ignorefile packaging/.trivyignore "$sbom"'\
+#         """,
+#       language = "system",
+#       pass_filenames = false,
+#       always_run = true,
+#       stages = ["manual"]
+#     },
+# ]
+
 [[repos]]
-repo = "local"
+repo = "https://github.com/crate-ci/typos"
+rev = "v1.50.2"
 hooks = [
-    {
-      id = "trivy-lockfile",
-      name = "trivy: uv.lock vulnerabilities",
-      entry = """\
-        trivy fs --scanners vuln --skip-dirs .venv --skip-dirs .git \
-        --exit-code 1 --ignore-unfixed --severity CRITICAL,HIGH \
-        --ignorefile packaging/.trivyignore .\
-        """,
-      language = "system",
-      pass_filenames = false,
-      files = "^(uv\\.lock|pyproject\\.toml|packaging/\\.trivyignore)$",
-      stages = ["pre-push"]
-    },
-
-    {
-      id = "docker-test-target",
-      name = "docker build --target test",
-      entry = "docker buildx build --target test .",
-      language = "system",
-      pass_filenames = false,
-      files = """\
-        ^(src/|tests/|packaging/|pyproject\\.toml|uv\\.lock|\
-        Dockerfile|\\.dockerignore|\\.python-version)\
-        """,
-      stages = ["pre-push"]
-    },
-
-    {
-      id = "trivy-image-scan",
-      name = "build + trivy image scan (CI replica)",
-      entry = """\
-        sh -euc 'sbom="$(mktemp)"
-        docker buildx build --pull --platform linux/amd64 \
-          --target runtime --load -t local/ci-scan:latest .
-        trivy image --format cyclonedx --output "$sbom" local/ci-scan:latest
-        trivy sbom --exit-code 1 --ignore-unfixed \
-          --severity CRITICAL,HIGH \
-          --ignorefile packaging/.trivyignore "$sbom"'\
-        """,
-      language = "system",
-      pass_filenames = false,
-      always_run = true,
-      stages = ["manual"]
-    },
+  { id = "typos", files = "(^|/)README\\.md$",
+    args = ["--diff", "--config", ".config/_typos.toml"] }
 ]
 
 [[repos]]
@@ -82,7 +90,8 @@ hooks = [
 repo = "https://github.com/docker-compose-linter/pre-commit-dclint"
 rev = "v3.0.0"
 hooks = [
-    { id = "dclint", files = "^(docker-)?compose\\.ya?ml$", args = ["-c", ".config/.dclintrc", "--fix"] },
+    { id = "dclint", files = "^(docker-)?compose\\.ya?ml$",
+      args = ["-c", ".config/.dclintrc", "--fix"] },
 ]
 
 [[repos]]
@@ -97,7 +106,7 @@ hooks = [
 repo = "https://github.com/igorshubovych/markdownlint-cli"
 rev = "v0.49.1"
 hooks = [
-    { id = "markdownlint", args = ["--fix"] },
+    { id = "markdownlint", args = ["-c", ".config/.markdownlint.jsonc", "-f"]},
 ]
 
 [[repos]]
@@ -112,14 +121,18 @@ hooks = [
 repo = "https://github.com/adrienverge/yamllint"
 rev = "v1.38.0"
 hooks = [
-    { id = "yamllint", files = { glob = [".forgejo/workflows/**", "packaging/**"] } },
+    { id = "yamllint",
+      files = { glob = [".forgejo/workflows/**", "packaging/**"] }
+    },
 ]
 
 [[repos]]
-repo = "https://github.com/ansible/ansible-lint"
-rev = "v25.11.0"
+repo = "local"
 hooks = [
-  { id = "ansible-lint", files = "^semaphore/", pass_filenames = true, always_run = false },
+  { id = "ansible-lint", name = "ansible-lint", entry = "ansible-lint",
+    language = "system", files = "^semaphore/", pass_filenames = true,
+    always_run = false, args = ["-c", ".config/.ansible-lint.yml"]
+  },
 ]
 
 [[repos]]

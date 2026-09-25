@@ -7,10 +7,16 @@ from zoneinfo import ZoneInfo
 import httpx
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
+from prometheus_fastapi_instrumentator import Instrumentator
 
-# from prometheus_fastapi_instrumentator import Instrumentator
 from overheadadsb import config
-from overheadadsb.models import Aircraft, AircraftCategory, APIResponse, Meta
+from overheadadsb.models import (
+    Aircraft,
+    AircraftCategory,
+    APIResponse,
+    HealthResponse,
+    Meta,
+)
 from overheadadsb.poller import poll_cache
 
 logging.basicConfig(level=logging.INFO)
@@ -34,7 +40,11 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Instrumentator().instrument(app).expose(app)
+Instrumentator(
+    should_group_status_codes=True,
+    should_ignore_untemplated=True,
+    excluded_handlers=["/metrics"],
+).instrument(app).expose(app, include_in_schema=False)
 
 
 def build_meta(
@@ -61,11 +71,16 @@ async def overhead():
 
 @app.get("/api/v1/overhead/FR24")
 async def nearest_flightradar24():
-    (
-        overhead,
-        _,
-    ) = await poll_cache.snapshot()
-    if overhead and not overhead.registration:
+    overhead, _ = await poll_cache.snapshot()
+    if overhead is None:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "code": "no_aircraft",
+                "message": "No aircraft currently in range",
+            },
+        )
+    if not overhead.registration:
         raise HTTPException(
             status_code=404,
             detail={
@@ -78,23 +93,20 @@ async def nearest_flightradar24():
             follow_redirects=True,
             timeout=config.HTTP_TIMEOUT,
         ) as client:
-            if overhead:
-                response = await client.get(
-                    f"{config.FR24_URL}/{overhead.registration}"
+            response = await client.get(f"{config.FR24_URL}/{overhead.registration}")
+            redirect = str(response.url)
+            if redirect.rstrip("/") == config.FR24_URL:
+                raise HTTPException(
+                    status_code=404,
+                    detail={
+                        "code": "no_flightradar24_entry",
+                        "message": f"No FlightRadar24 entry for {overhead.registration}",
+                    },
                 )
-                redirect = str(response.url)
-                if redirect.rstrip("/") == config.FR24_URL:
-                    raise HTTPException(
-                        status_code=404,
-                        detail={
-                            "code": "no_flightradar24_entry",
-                            "message": "No FlightRadar24 entry for {overhead.registration}",
-                        },
-                    )
-                return RedirectResponse(
-                    url=redirect,
-                    status_code=302,
-                )
+            return RedirectResponse(
+                url=redirect,
+                status_code=302,
+            )
     except httpx.HTTPError as e:
         logger.warning(
             "FR24 lookup failed: %s",
@@ -111,13 +123,19 @@ async def nearest_flightradar24():
 
 @app.get(
     "/health",
-    response_model=Meta,
+    response_model=HealthResponse,
 )
 async def health():
-    as_of = await poll_cache.health()
-    return Meta(
-        as_of=as_of,
-    )
+    as_of, poll_ok, last_error = await poll_cache.health()
+    if not poll_ok:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "code": "poller_unhealthy",
+                "message": last_error or "No successful poll yet",
+            },
+        )
+    return HealthResponse(as_of=as_of, poll_ok=poll_ok, last_error=last_error)
 
 
 @app.get(

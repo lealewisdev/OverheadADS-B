@@ -21,11 +21,13 @@
         regexp: '^IMAGE_TAG='
         line: "IMAGE_TAG={{ image_tag }}"
         create: true
+        mode: "0644"
 
     - name: Recreate service
       ansible.builtin.command:
         cmd: docker compose up -d --no-deps --force-recreate {{ service_name }}
         chdir: "{{ compose_dir }}"
+      changed_when: true
 
     - name: Wait for health check
       ansible.builtin.uri:
@@ -39,37 +41,48 @@
 
     - name: Fail if unhealthy
       ansible.builtin.fail:
-        msg: "Health check failed after deploying {{ image_tag }} — the n8n pipeline will trigger the rollback Semaphore task"
+        msg: >-
+          Health check failed after deploying {{ image_tag }} — the n8n
+          pipeline will trigger the rollback Semaphore task
       when: health_result.status is not defined or health_result.status != 200
 
-    # ---- Everything below only runs if the deploy is healthy ----
+    # If healthy:
 
     - name: Save deployed image to temp tarball
       ansible.builtin.command:
-        cmd: docker save -o {{ compose_dir }}/last_good.tar.tmp {{ registry }}/{{ image_repo }}:{{ image_tag }}
+        cmd: >-
+          docker save -o {{ compose_dir }}/last_good.tar.tmp
+          {{ registry }}/{{ image_repo }}:{{ image_tag }}
       changed_when: true
 
     - name: Verify temp tarball is readable
+      # noqa: command-instead-of-module
       ansible.builtin.command:
         cmd: tar -tf {{ compose_dir }}/last_good.tar.tmp
       changed_when: false
 
     - name: Replace last-good tarball atomically
       ansible.builtin.command:
-        cmd: mv -f {{ compose_dir }}/last_good.tar.tmp {{ compose_dir }}/last_good.tar
+        cmd: >-
+          mv -f {{ compose_dir }}/last_good.tar.tmp
+          {{ compose_dir }}/last_good.tar
       changed_when: true
 
     - name: Record this tag as last known-good
       ansible.builtin.copy:
         content: "{{ image_tag }}\n"
         dest: "{{ compose_dir }}/.last_good_tag"
+        mode: "0644"
 
     - name: Move the last-good pointer tag onto this image (local)
       ansible.builtin.command:
-        cmd: docker tag "{{ registry }}/{{ image_repo }}:{{ image_tag }}" "{{ registry }}/{{ image_repo }}:last-good"
+        cmd: >-
+          docker tag "{{ registry }}/{{ image_repo }}:{{ image_tag }}"
+          "{{ registry }}/{{ image_repo }}:last-good"
       changed_when: true
 
-    - name: Push last-good tag to the registry (protected by the Forgejo cleanup rule)
+    # Must be protected from forgejo cleanup
+    - name: Push last-good tag to the registry
       ansible.builtin.command:
         cmd: docker push "{{ registry }}/{{ image_repo }}:last-good"
       changed_when: true
@@ -78,5 +91,8 @@
 
     - name: Warn if last-good push failed
       ansible.builtin.debug:
-        msg: "WARNING: deploy of {{ image_tag }} is healthy and saved to last_good.tar, but pushing :last-good to the registry failed. The registry copy is stale until the next successful deploy."
+        msg: >-
+          WARNING: deploy of {{ image_tag }} is healthy and saved to
+          last_good.tar, but pushing :last-good to the registry failed.
+          The registry copy is stale until the next successful deploy.
       when: last_good_push is failed

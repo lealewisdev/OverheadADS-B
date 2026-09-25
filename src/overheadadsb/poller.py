@@ -58,7 +58,7 @@ class PollCache:
             owner = HEXDBResponse.model_validate(response.json()).RegisteredOwners
         except httpx.HTTPError as e:
             logger.warning("HexDB lookup failed for %s: %s", icao, e)
-            owner = None
+            return None  # not cached — retried next time this aircraft is seen
 
         self._owner_poll_cache[icao] = owner
         if len(self._owner_poll_cache) > config.OWNER_POLL_CACHE_MAX:
@@ -127,9 +127,9 @@ class PollCache:
                 self._as_of,
             )
 
-    async def health(self):
+    async def health(self) -> tuple[datetime | None, bool, str | None]:
         async with self._lock:
-            return self._as_of
+            return (self._as_of, self._poll_ok, self._last_error)
 
     async def poll_loop(self):
         self.load_reference_data()

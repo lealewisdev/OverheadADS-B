@@ -228,8 +228,7 @@ jobs:
               \"semaphore_project_id\":${SEMAPHORE_PROJECT_ID},
               \"semaphore_deploy_template_id\":${SEMAPHORE_DEPLOY_TEMPLATE_ID},
               \"semaphore_rollback_template_id\":${SEMAPHORE_ROLLBACK_TMPL_ID},
-              \"apprise_url\":\"${APPRISE_URL}\",
-              \"health_url\":\"${HEALTH_URL}\"
+              \"apprise_url\":\"${APPRISE_URL}\"
             }" \
             "$N8N_DEPLOY_WEBHOOK_URL"
 

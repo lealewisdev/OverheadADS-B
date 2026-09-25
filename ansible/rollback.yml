@@ -10,7 +10,9 @@
 
     - name: Fail if no last-good tag was recorded
       ansible.builtin.fail:
-        msg: "No {{ compose_dir }}/.last_good_tag file found — there is no known-good tag to roll back to (was this the first-ever deploy?)."
+        msg: >-
+          No {{ compose_dir }}/.last_good_tag file found — there is no
+          known-good tag to roll back to (was this the first-ever deploy?).
       when: not prev_tag_file.stat.exists
 
     - name: Read last-good tag
@@ -40,7 +42,10 @@
       block:
         - name: Warn that the tarball could not be used
           ansible.builtin.debug:
-            msg: "WARNING: {{ compose_dir }}/last_good.tar is missing or failed to load — falling back to {{ registry }}/{{ image_repo }}:last-good from the registry."
+            msg: >-
+              WARNING: {{ compose_dir }}/last_good.tar is missing or failed to
+              load — falling back to {{ registry }}/{{ image_repo }}:last-good
+              from the registry.
 
         - name: Log in to registry
           community.docker.docker_login:
@@ -56,7 +61,9 @@
 
         - name: Retag as the recorded version tag
           ansible.builtin.command:
-            cmd: docker tag "{{ registry }}/{{ image_repo }}:last-good" "{{ registry }}/{{ image_repo }}:{{ previous_tag }}"
+            cmd: >-
+              docker tag "{{ registry }}/{{ image_repo }}:last-good"
+              "{{ registry }}/{{ image_repo }}:{{ previous_tag }}"
           changed_when: true
 
     - name: Point compose back at the previous tag
@@ -65,11 +72,15 @@
         regexp: '^IMAGE_TAG='
         line: "IMAGE_TAG={{ previous_tag }}"
         create: true
+        mode: "0644"
 
     - name: Recreate service on previous tag
       ansible.builtin.command:
-        cmd: docker compose up -d --no-deps --force-recreate --pull never {{ service_name }}
+        cmd: >-
+          docker compose up -d --no-deps --force-recreate
+          --pull never {{ service_name }}
         chdir: "{{ compose_dir }}"
+      changed_when: true
 
     - name: Wait for health check after rollback
       ansible.builtin.uri:
@@ -83,5 +94,7 @@
 
     - name: Fail if rollback is also unhealthy
       ansible.builtin.fail:
-        msg: "Rollback to {{ previous_tag }} also failed its health check — manual intervention required, no automatic fallback exists."
+        msg: >-
+          Rollback to {{ previous_tag }} also failed its health check — manual
+          intervention required, no automatic fallback exists.
       when: health_result.status is not defined or health_result.status != 200

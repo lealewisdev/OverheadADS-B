@@ -107,3 +107,9 @@ class HEXDBResponse(BaseModel):
     Type: str | None = None
     RegisteredOwners: str | None = None
     OperatorFlagCode: str | None = None
+
+
+class HealthResponse(BaseModel):
+    as_of: datetime | None = None
+    poll_ok: bool
+    last_error: str | None = None
