@@ -87,7 +87,7 @@ Returns `{"as_of": ...}` with the time of the last successful poll. The
 status is 200 whenever the app is running, including before the first
 successful poll, when `as_of` is `null`.
 
-### `GET /api/v1/rainmetertest`
+### `GET /api/v1/example`
 
 Returns a fixed example aircraft in the same format as `/api/v1/overhead`,
 for testing a client without live traffic.
@@ -146,6 +146,8 @@ The app is configured entirely through environment variables. Copy
 | `OWNER_POLL_CACHE_MAX` | `5000`          | Max cached owner lookups       |
 | `PORT`                 | `8003`          | Port the API listens on        |
 | `TZ`                   | `Europe/London` | Container time zone            |
+| `DATABASE_URL`         | Optional        | Persist Sightings per ICAO     |
+| `ENABLE_PROMETHEUS`    | `false`         | Scrape data for Alloy->Grafana |
 
 The remaining entries in `.env.example` are used for deployment rather
 than by the app. `REGISTRY`, `REGISTRY_USER` and `IMAGE_TAG` form the
@@ -172,7 +174,7 @@ when the API cannot be reached or its response cannot be parsed.
 Copy `clients/rainmeter/overheadadsb.ini` into a skin folder and set the
 `URL` and `UpdateRate` variables. The skin uses the WebParser plugin and
 shows "Aircraft Free Zone" when `data` is `null`. Point `URL` at
-`/api/v1/rainmetertest` to check the layout without live traffic.
+`/api/v1/example` to check the layout without live traffic.
 
 ## Development
 
@@ -316,6 +318,6 @@ plus a `registry_password` environment variable.
    instead of just helicopters
 - Switch from [deeside](https://www.deeside.com/squawk-codes/) to UK
    AIP ENR 1.6 for squawk codes
-- Packaging with nFPM
+- Packaging with nFPM (mu;ti-arch)
 - Updatecli to premt trivy failing from fixable issues
 - Maybe [Container Structure Tests](https://github.com/GoogleContainerTools/container-structure-test)

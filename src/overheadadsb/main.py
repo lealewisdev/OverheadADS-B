@@ -14,6 +14,7 @@ from overheadadsb.models import (
     Aircraft,
     AircraftCategory,
     APIResponse,
+    ErrorDetail,
     HealthResponse,
     Meta,
 )
@@ -40,11 +41,12 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-Instrumentator(
-    should_group_status_codes=True,
-    should_ignore_untemplated=True,
-    excluded_handlers=["/metrics"],
-).instrument(app).expose(app, include_in_schema=False)
+if config.ENABLE_PROMETHEUS:
+    Instrumentator(
+        should_group_status_codes=True,
+        should_ignore_untemplated=True,
+        excluded_handlers=["/metrics"],
+    ).instrument(app).expose(app, include_in_schema=False)
 
 
 def build_meta(
@@ -69,7 +71,21 @@ async def overhead():
     )
 
 
-@app.get("/api/v1/overhead/FR24")
+@app.get(
+    "/api/v1/overhead/FR24",
+    responses={
+        404: {
+            "model": ErrorDetail,
+            "description": (
+                "No aircraft currently in range, or the nearest one has no registration"
+            ),
+        },
+        502: {
+            "model": ErrorDetail,
+            "description": "FlightRadar24 unreachable",
+        },
+    },
+)
 async def nearest_flightradar24():
     overhead, _ = await poll_cache.snapshot()
     if overhead is None:
@@ -124,6 +140,12 @@ async def nearest_flightradar24():
 @app.get(
     "/health",
     response_model=HealthResponse,
+    responses={
+        503: {
+            "model": ErrorDetail,
+            "description": "Poller is unhealthy, or hasn't completed a successful poll yet",
+        },
+    },
 )
 async def health():
     as_of, poll_ok, last_error = await poll_cache.health()
@@ -139,8 +161,9 @@ async def health():
 
 
 @app.get(
-    "/api/v1/rainmetertest",
+    "/api/v1/example",
     response_model=APIResponse,
+    include_in_schema=False,
 )
 async def example():
     example_aircraft = Aircraft(

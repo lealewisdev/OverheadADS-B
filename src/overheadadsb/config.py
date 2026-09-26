@@ -17,3 +17,6 @@ FR24_URL = "https://www.flightradar24.com/data/aircraft"
 
 SQUAWKS_CSV = "src/overheadadsb/data/uk_squawk_codes.csv"
 ICAO_CSV = "src/overheadadsb/data/aircraft_type_designators_helicopter.csv"
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+ENABLE_PROMETHEUS = os.getenv("ENABLE_PROMETHEUS", "false").lower() == "true"

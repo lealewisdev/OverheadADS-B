@@ -27,7 +27,15 @@
   env.LC_ALL = "C.UTF-8";
   env.LANG = "C.UTF-8";
 
+  env.DHI_USER = config.secretspec.secrets.DHI_USER;
+  env.DHI_TOKEN = config.secretspec.secrets.DHI_TOKEN;
+
   scripts.lint.exec = "prek run --all-files";
+
+  scripts.update-pins.exec = ''
+    set -euo pipefail
+    updatecli apply --config .config/updatecli.d/
+  '';
 
   enterShell = ''
     export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/docker.sock"

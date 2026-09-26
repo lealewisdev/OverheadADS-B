@@ -113,3 +113,8 @@ class HealthResponse(BaseModel):
     as_of: datetime | None = None
     poll_ok: bool
     last_error: str | None = None
+
+
+class ErrorDetail(BaseModel):
+    code: str
+    message: str

@@ -9,6 +9,11 @@ services:
     #      target: runtime
     #      dockerfile: Dockerfile
     container_name: overheadadsb
+    #    Using a reverse proxy instead of exposing ports is recommended
+    #    networks:
+    #      - traefik-data
+    volumes:
+      - ./custom_squawks.csv:/app/src/overheadadsb/data/uk_squawk_codes.csv:ro
     environment:
       TZ: ${TZ}
       LAT: ${LAT}
@@ -19,11 +24,10 @@ services:
       UVICORN_PORT: ${UVICORN_PORT}
       HTTP_TIMEOUT: ${HTTP_TIMEOUT}
       OWNER_POLL_CACHE_MAX: ${OWNER_POLL_CACHE_MAX}
+      DATABASE_URL: ${DATABASE_URL}
+      ENABLE_PROMETHEUS: ${ENABLE_PROMETHEUS}
     ports:
       - '${HOST_IP}:8003:${PORT}/tcp'
-    #    Using a reverse proxy instead of exposing ports is recommended
-    #    networks:
-    #      - traefik
     restart: unless-stopped
     logging:
       driver: json-file
@@ -41,5 +45,5 @@ services:
 #      - "uptime.address=https://overheadadsb.${DOMAIN}"
 # Reuse existing traefik network if applicable
 # networks:
-#  traefik:
+#  traefik-data:
 #    external: true

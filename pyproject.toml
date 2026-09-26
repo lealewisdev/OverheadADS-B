@@ -1,11 +1,13 @@
 [project]
 name = "overheadadsb"
-version = "1.0.1"
+version = "1.0.2"
 description = "ADS-B telemetry enrichment API"
 requires-python = ">=3.14"
 dependencies = [
+    "asyncpg>=0.31.0",
     "fastapi>=0.139.0",
     "httpx>=0.28.1",
+    "prometheus-client>=0.25.0",
     "prometheus-fastapi-instrumentator>=8.0.2",
     "pydantic>=2.13.4",
     "uvicorn>=0.51.0",
