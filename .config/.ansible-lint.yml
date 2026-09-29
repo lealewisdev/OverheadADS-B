@@ -5,3 +5,7 @@ mock_modules:
 
 skip_list:
   - args[module]
+
+exclude_paths:
+  - ../.forgejo
+  - ../secrets.enc.yaml

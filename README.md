@@ -77,15 +77,26 @@ other aircraft fields are `null` when unknown.
 Redirects (302) to the Flightradar24 page for the closest aircraft's
 registration. Errors return a JSON `detail` with a `code`:
 
+- `404 no_aircraft`: no aircraft currently in range.
 - `404 no_registration`: the closest aircraft has no registration.
 - `404 no_flightradar24_entry`: Flightradar24 has no page for it.
 - `502 flightradar24_unreachable`: the lookup failed.
 
 ### `GET /health`
 
-Returns `{"as_of": ...}` with the time of the last successful poll. The
-status is 200 whenever the app is running, including before the first
-successful poll, when `as_of` is `null`.
+Returns `200` once at least one poll has succeeded:
+
+```json
+{
+  "as_of": "2026-09-24T14:05:31.123456+01:00",
+  "poll_ok": true,
+  "last_error": null
+}
+```
+
+Before that, or whenever the most recent poll failed, it returns `503`
+instead, with a `detail.message` explaining why (`"No successful poll
+yet"` if none has completed).
 
 ### `GET /api/v1/example`
 
@@ -95,8 +106,7 @@ for testing a client without live traffic.
 ## Quick start
 
 **Requirements**: Docker, Compose
-**Optional**: (External) Docker network named `traefik`, personal fork of this
- repository to utilize the [CI/CD](#cicd-and-deployment) pipeline
+**Optional**: (External) Docker network named `traefik`
 
 ```bash
 git clone <repo-url>
@@ -123,8 +133,7 @@ images are Docker Hardened Images), comment out `image:` in
 with the provided Ansible playbooks.
 
 To run without Docker you need Python 3.14 and
-[uv](https://docs.astral.sh/uv/). Run from the repository root, because
-the data files are loaded by relative path:
+[uv](https://docs.astral.sh/uv/):
 
 ```bash
 uv sync --no-dev
@@ -148,6 +157,11 @@ The app is configured entirely through environment variables. Copy
 | `TZ`                   | `Europe/London` | Container time zone            |
 | `DATABASE_URL`         | Optional        | Persist Sightings per ICAO     |
 | `ENABLE_PROMETHEUS`    | `false`         | Scrape data for Alloy->Grafana |
+
+`POLL_INT` is clamped to a minimum of 1 second, to respect adsb.fi's
+rate limit. If `LAT`/`LON` are left unset, the service logs a warning
+at startup and polls around (0, 0) — the Gulf of Guinea — where
+nothing will ever be in range.
 
 The remaining entries in `.env.example` are used for deployment rather
 than by the app. `REGISTRY`, `REGISTRY_USER` and `IMAGE_TAG` form the
@@ -192,17 +206,15 @@ Without Nix, install uv, run `uv sync`, and use the commands below.
 
 ### Checks
 
-These are the same checks the Docker `test` stage and CI run:
-
 ```bash
 uv run ruff check src scripts
 uv run basedpyright
 uv run bandit -r src scripts -ll
 uv run pytest --cov=overheadadsb --cov-report=term-missing
-
-# or, all in one, exactly as CI does it
-docker buildx build --target test .
 ```
+
+These also run as the Docker `test` build stage:
+`docker buildx build --target test .`
 
 Git hooks (managed by [prek](https://prek.j178.dev/)) cover whitespace,
 large files, Hadolint, TruffleHog, Docker Compose linting, Ruff,
@@ -233,76 +245,18 @@ Squawk meanings currently come from
 [deeside.com](https://www.deeside.com/squawk-codes/), and helicopter
 designators from the FAA order (see [TODO](#todo)).
 
-## CI/CD and deployment
-
-Workflows live in `.forgejo/workflows/` and run on Forgejo Actions.
-
-- **PR checks** (`pr-checks.yml`): Hadolint, Compose lint, a TruffleHog
-  secret scan, Renovate config validation and the `test` image stage.
-- **Build, scan, push** (`build-scan.push.yml`): on pushes to `main`
-  that touch code, packaging or CI files. It runs the tests, builds the
-  `runtime` image, generates a CycloneDX SBOM, fails on fixable HIGH or
-  CRITICAL vulnerabilities (Trivy), pushes `<sha>`, `v<version>` and
-  `latest` tags, signs the image and attests the SBOM with cosign, then
-  calls an n8n webhook to start deployment.
-- **Scan latest image** (`scan-latest-image.yml`): nightly Trivy scan of
-  the published `latest` image at 04:00 Europe/London, with n8n
-  notifications.
-
-Images are signed, so you can verify a pulled image with the public key
-in the repo:
-
-```bash
-cosign verify --key packaging/cosign.pub <registry>/<repo>:<tag>
-```
-
-Renovate keeps dependencies current: container images are pinned by
-digest, and lock files are refreshed on Mondays before 6am.
-
-### Required configuration
-
-| Type     | Name                                            |
-| -------- | ----------------------------------------------- |
-| Variable | `REGISTRY`, `SEMAPHORE_PROJECT_ID`              |
-| Variable | `SEMAPHORE_DEPLOY_TEMPLATE_ID`                  |
-| Variable | `SEMAPHORE_ROLLBACK_TEMPLATE_ID`                |
-| Secret   | `DHI_USER`, `DHI_TOKEN`                         |
-| Secret   | `REGISTRY_USER`, `REGISTRY_TOKEN`               |
-| Secret   | `COSIGN_KEY`, `COSIGN_PASSWORD`                 |
-| Secret   | `N8N_DEPLOY_WEBHOOK_URL`, `N8N_WEBHOOK_URL`     |
-| Secret   | `N8N_WEBHOOK_TOKEN`, `SEMAPHORE_URL`            |
-| Secret   | `APPRISE_URL`                                   |
-
-### Deploying and rolling back
-
-n8n receives the webhook and starts a Semaphore task that runs the
-playbooks in `ansible/` against the `app_servers` group.
-
-- `deploy.yml` records the running image tag (to `.previous_tag`), pulls
-  the new image, sets `IMAGE_TAG` in the host's `.env`, recreates the
-  service and waits for `health_url` (for example the `/health` endpoint)
-  to return 200 (10 tries, 3 seconds apart). A failed health check fails
-  the run, which triggers the rollback task.
-- `rollback.yml` restores the tag saved in `.previous_tag` and recreates
-  the service.
-
-The playbooks expect these variables: `compose_dir`, `service_name`,
-`registry`, `registry_user`, `image_repo`, `image_tag` and `health_url`,
-plus a `registry_password` environment variable.
-
 ## Project layout
 
 ```text
 .
 ├── src/overheadadsb/       # API: main, poller, models, config, CSV data
-├── tests/                  # pytest suite (placeholder for now)
+├── tests/                  # pytest suite
 ├── scripts/                # data-generation scripts
 ├── clients/
 │   ├── quickshell/         # Quickshell bar widget (QML)
 │   └── rainmeter/          # Rainmeter skin
 ├── ansible/                # deploy and rollback playbooks
 ├── packaging/              # nfpm config, cosign public key, Trivy ignores
-├── .forgejo/workflows/     # PR checks, build/scan/push, nightly scan
 ├── Dockerfile              # builder, test, runtime and .deb package stages
 ├── compose.yaml            # Traefik-fronted service definition
 ├── devenv.nix, devenv.yaml # reproducible dev shell (Nix)
@@ -321,3 +275,4 @@ plus a `registry_password` environment variable.
 - Packaging with nFPM (mu;ti-arch)
 - Updatecli to premt trivy failing from fixable issues
 - Maybe [Container Structure Tests](https://github.com/GoogleContainerTools/container-structure-test)
+- Change from .trivyognore to .trivyignore.yaml

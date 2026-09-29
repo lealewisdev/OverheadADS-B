@@ -16,3 +16,8 @@ src/overheadadsb/__pychache__
 .last_good_tag
 last_good.tar
 .devenv
+.pre-commit-config.yaml
+
+# Export
+*.tar.gz
+*.tgz

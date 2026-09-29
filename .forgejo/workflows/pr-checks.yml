@@ -11,15 +11,65 @@ env:
   REGISTRY: ${{ vars.REGISTRY }}
   IMAGE: ${{ vars.REGISTRY }}/${{ github.repository }}
 
+concurrency:
+  group: pr-checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
+  version-bump-guard:
+    runs-on: docker
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Guard Version Bump
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: bash packaging/guard-version-bump.sh "$BASE_SHA" HEAD
+
+  trufflehog:
+    runs-on: docker
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Scan For Secrets
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          trufflehog git file://. \
+            --since-commit "$BASE_SHA" \
+            --only-verified \
+            --fail
+
+  renovate-config:
+    runs-on: docker
+    # yamllint disable-line rule:line-length
+    container: renovate/renovate:44.52@sha256:778ff1b404d79ef7763f0c904ebb279a4138ffc1017181ad076b1648e37f6dbd
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - name: Validate Renovate config
+        run: renovate-config-validator --strict
+
   hadolint:
     runs-on: docker
     timeout-minutes: 10
     steps:
       - name: Checkout
-        # v7.0.1
         # yamllint disable-line rule:line-length
-        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
 
       - name: Lint Dockerfiles
         run: |
@@ -42,97 +92,66 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Checkout
-        # v7.0.1
         # yamllint disable-line rule:line-length
-        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
 
       - name: Lint Compose Files
-        # yamllint disable-line rule:line-length
-        uses: https://github.com/docker-compose-linter/dclint-github-action@18659f6a7956706cb67cf9c1ad5e55f4352cbc17
-        with:
-          path: ./
-          recursive: true
+        run: |
+          docker create --name dclint \
+            zavoloklom/dclint:3.1.0 -r -f github .
+          trap 'docker rm -f dclint >/dev/null 2>&1 || true' EXIT
+          docker cp . dclint:/app
+          docker start -a dclint
 
-  trufflehog:
+  prek:
     runs-on: docker
     timeout-minutes: 10
     steps:
       - name: Checkout
-        # v7.0.1
         # yamllint disable-line rule:line-length
-        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           fetch-depth: 0
 
-      - name: Scan For Secrets
+      # Runs every pre-commit-stage hook from devenv.nix in one pass,
+      # so this is the single source of truth for lint/format/secret
+      # checks instead of duplicating each one as its own job.
+      #
+      # Assumes the runner image already carries prek and the hook
+      # binaries it shells out to (shellcheck, hadolint, trufflehog,
+      # ansible-lint, typos, yamllint, ruff, markdownlint-cli) the same
+      # way devenv.nix's `packages` list does. If it doesn't yet, add
+      # them there, or install them in a step before this one.
+      #
+      # docker-test-target duplicates the `test` job's own build;
+      # renovate-config-validator duplicates the dedicated
+      # renovate-config job; ruff/ruff-format duplicate the Dockerfile
+      # test stage's own `uv run ruff check`, which runs against the
+      # project's *locked* ruff version rather than whatever this
+      # runner happens to carry, so it's the one that should be
+      # authoritative. trivy-image-scan/commitizen are pre-push/
+      # commit-msg stage hooks that prek run --all-files wouldn't pick
+      # up anyway.
+      - name: Run prek
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        run: |
-          trufflehog git file://. \
-            --since-commit "$BASE_SHA" \
-            --only-verified \
-            --fail
-
-  renovate-config:
-    runs-on: docker
-    # yamllint disable-line rule:line-length
-    container: renovate/renovate:44.52@sha256:778ff1b404d79ef7763f0c904ebb279a4138ffc1017181ad076b1648e37f6dbd
-    timeout-minutes: 5
-    steps:
-      - name: Checkout
-        # v7.0.1
-        # yamllint disable-line rule:line-length
-        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-
-      - name: Validate Renovate config
-        run: renovate-config-validator --strict
-
-  version-bump-guard:
-    runs-on: docker
-    timeout-minutes: 5
-    steps:
-      - name: Checkout
-        # v7.0.1
-        # yamllint disable-line rule:line-length
-        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          fetch-depth: 0
-
-      - name: Guard Version Bump
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        run: |
-          DOCKERFILE_CHANGED=$(
-            git diff --name-only "$BASE_SHA" HEAD -- Dockerfile
-          )
-          if [ -z "$DOCKERFILE_CHANGED" ]; then
-            exit 0
-          fi
-
-          extract_version() {
-            git show "$1:pyproject.toml" 2>/dev/null \
-              | grep -m1 -E '^version[[:space:]]*=' \
-              | sed -E 's/version[[:space:]]*=[[:space:]]*"([^"]+)"/\1/'
-          }
-
-          BASE_VERSION=$(extract_version "$BASE_SHA")
-          HEAD_VERSION=$(extract_version HEAD)
-
-          if [ "$BASE_VERSION" = "$HEAD_VERSION" ]; then
-            echo "Dockerfile changed but pyproject.toml's version is still" \
-              "${HEAD_VERSION}." >&2
-            echo "Bump the version in pyproject.toml before merging." >&2
-            exit 1
-          fi
+          SKIP: docker-test-target,renovate-config-validator,ruff,ruff-format
+        run: prek run --all-files
 
   test:
     runs-on: docker
     timeout-minutes: 15
+    env:
+      PR_SCAN_TAG: pr-scan:${{ github.run_id }}
     steps:
       - name: Checkout
-        # v7.0.1
         # yamllint disable-line rule:line-length
-        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - name: Check uv.lock Is In Sync
+        run: uv lock --check
+
+      - name: Audit Python Dependencies
+        run: uv audit --frozen
 
       - name: Log In To Registry
         env:
@@ -159,7 +178,7 @@ jobs:
             --platform linux/amd64 \
             --target runtime \
             --cache-from "type=registry,ref=${IMAGE}:buildcache" \
-            -t pr-scan:local \
+            -t "$PR_SCAN_TAG" \
             --load \
             .
 
@@ -167,7 +186,14 @@ jobs:
         run: |
           docker buildx inspect forgejo-builder >/dev/null 2>&1 || \
             docker buildx create --name forgejo-builder --use
-          docker buildx build --target test .
+          docker buildx build \
+            --pull \
+            --cache-from "type=registry,ref=${IMAGE}:buildcache" \
+            --cache-from "type=registry,ref=${IMAGE}:buildcache-test" \
+            --cache-to \
+              "type=registry,ref=${IMAGE}:buildcache-test,mode=max" \
+            --target test \
+            .
 
       - name: Log Out Of dhi.io
         if: always()
@@ -182,22 +208,32 @@ jobs:
         run: echo "date=$(date -u +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
 
       - name: Cache Trivy DB
-        # v6.1.0
         # yamllint disable-line rule:line-length
-        uses: https://github.com/actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        uses: https://github.com/actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
         with:
           path: ~/.cache/trivy
           key: trivy-db-${{ runner.os }}-${{ steps.trivy-date.outputs.date }}
           restore-keys: |
             trivy-db-${{ runner.os }}-
 
-      - name: Scan Image
+      - name: Generate SBOM
         run: |
           trivy image \
             --cache-dir ~/.cache/trivy \
-            --scanners vuln \
+            --format cyclonedx \
+            --output sbom.cdx.json \
+            "$PR_SCAN_TAG"
+
+      - name: Scan Image
+        run: |
+          trivy sbom \
+            --cache-dir ~/.cache/trivy \
             --exit-code 1 \
             --ignore-unfixed \
             --severity CRITICAL,HIGH \
             --ignorefile packaging/.trivyignore \
-            pr-scan:local
+            sbom.cdx.json
+
+      - name: Clean Up Local Scan Image
+        if: always()
+        run: docker rmi "$PR_SCAN_TAG" 2>/dev/null || true

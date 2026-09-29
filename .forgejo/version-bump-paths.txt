@@ -1,0 +1,4 @@
+src/**
+Dockerfile
+.dockerignore
+uv.lock

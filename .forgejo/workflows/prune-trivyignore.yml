@@ -1,0 +1,53 @@
+---
+name: Prune Trivy Ignores
+"on":
+  workflow_call:
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  REGISTRY: ${{ vars.REGISTRY }}
+  IMAGE_REF: ${{ vars.REGISTRY }}/${{ github.repository }}:latest
+concurrency:
+  group: prune-trivyignore
+jobs:
+  prune:
+    runs-on: docker
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          token: ${{ secrets.RENOVATE_TOKEN }}
+
+      - name: Log In To Registry
+        env:
+          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          printf '%s' "$REGISTRY_TOKEN" | docker login "$REGISTRY" \
+            -u "$REGISTRY_USER" --password-stdin
+
+      - name: Prune
+        run: |
+          bash packaging/prune-trivyignore.sh --write \
+            "packaging=$IMAGE_REF"
+
+      - name: Commit And Push To main
+        env:
+          BOT_NAME: ${{ vars.BOT_NAME }}
+          BOT_EMAIL: ${{ vars.BOT_EMAIL }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          git diff --quiet && { echo "nothing to prune"; exit 0; }
+
+          # Guard: only packaging/.trivyignore, deletions only
+          [ "$(git diff --name-only)" = "packaging/.trivyignore" ]
+          git diff --numstat | awk '$1 != 0 { bad = 1 } END { exit bad }'
+
+          git config user.name "$BOT_NAME"
+          git config user.email "$BOT_EMAIL"
+          git commit -am "chore(trivy): drop stale ignore entries"
+          git push origin "HEAD:${REF_NAME}"

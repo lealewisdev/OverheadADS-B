@@ -1,0 +1,149 @@
+name: "overheadadsb: refresh pinned Dockerfile base-image digests"
+id: dockerfile-digests
+
+sources:
+  builderDigest:
+    name: "Latest digest for dhi.io/python:3.14-alpine-dev"
+    kind: dockerdigest
+    spec:
+      image: "dhi.io/python"
+      tag: "3.14-alpine-dev"
+      username: '{{ requiredEnv "DHI_USER" }}'
+      password: '{{ requiredEnv "DHI_TOKEN" }}'
+    # dockerdigest returns the FULL reference ("dhi.io/python:3.14-alpine-dev@sha256:...")
+    # not a bare digest. The dockerfile FROM target below only overwrites the text
+    # after the image name's colon, so without this trim it would write
+    # "dhi.io/python:dhi.io/python:3.14-alpine-dev@sha256:..." — trim the image
+    # name+colon here so only "3.14-alpine-dev@sha256:..." lands after the colon.
+    transformers:
+      - trimprefix: "dhi.io/python:"
+
+  runtimeDigest:
+    name: "Latest digest for dhi.io/python:3.14-alpine"
+    kind: dockerdigest
+    spec:
+      image: "dhi.io/python"
+      tag: "3.14-alpine"
+      username: '{{ requiredEnv "DHI_USER" }}'
+      password: '{{ requiredEnv "DHI_TOKEN" }}'
+    transformers:
+      - trimprefix: "dhi.io/python:"
+
+  builderDebDigest:
+    name: "Latest digest for dhi.io/python:3.14-dev"
+    kind: dockerdigest
+    spec:
+      image: "dhi.io/python"
+      tag: "3.14-dev"
+      username: '{{ requiredEnv "DHI_USER" }}'
+      password: '{{ requiredEnv "DHI_TOKEN" }}'
+    transformers:
+      - trimprefix: "dhi.io/python:"
+
+  uvGlibcDigest:
+    name: "Latest digest for dhi.io/uv:0"
+    kind: dockerdigest
+    spec:
+      image: "dhi.io/uv"
+      tag: "0"
+      username: '{{ requiredEnv "DHI_USER" }}'
+      password: '{{ requiredEnv "DHI_TOKEN" }}'
+    transformers:
+      - trimprefix: "dhi.io/uv:"
+
+  # Immutable release tag — this will rarely produce a diff. Kept for
+  # completeness / in case Astral ever re-pushes the tag.
+  uvMuslDigest:
+    name: "Latest digest for ghcr.io/astral-sh/uv:0.12.17"
+    kind: dockerdigest
+    spec:
+      image: "ghcr.io/astral-sh/uv"
+      tag: "0.12.17"
+    transformers:
+      - trimprefix: "ghcr.io/astral-sh/uv:"
+
+  # No tag was visible in the original FROM (digest-only) — assuming
+  # this was pinned from :latest. Correct the tag below if not.
+  # hidetag: true so the source output stays tagless ("goreleaser/nfpm@sha256:...")
+  # to match the line as written, instead of adding a ":latest" that wasn't there.
+  nfpmDigest:
+    name: "Latest digest for goreleaser/nfpm:latest"
+    kind: dockerdigest
+    spec:
+      image: "goreleaser/nfpm"
+      tag: "latest"
+    transformers:
+      # Docker Hub refs come back as index.docker.io/goreleaser/nfpm:latest@sha256:...
+      - trimprefix: "index.docker.io/goreleaser/nfpm:"
+
+targets:
+  updateBuilder:
+    name: "Bump dhi.io/python digest — builder stage"
+    kind: dockerfile
+    sourceid: builderDigest
+    spec:
+      file: Dockerfile
+      stage: builder
+      instruction:
+        keyword: "FROM"
+        matcher: "dhi.io/python"
+
+  updateRuntime:
+    name: "Bump dhi.io/python digest — runtime stage"
+    kind: dockerfile
+    sourceid: runtimeDigest
+    spec:
+      file: Dockerfile
+      stage: runtime
+      instruction:
+        keyword: "FROM"
+        matcher: "dhi.io/python"
+
+  updateBuilderDeb:
+    name: "Bump dhi.io/python digest — builder-deb stage"
+    kind: dockerfile
+    sourceid: builderDebDigest
+    spec:
+      file: Dockerfile
+      stage: builder-deb
+      instruction:
+        keyword: "FROM"
+        matcher: "dhi.io/python"
+
+  updateUvGlibc:
+    name: "Bump dhi.io/uv digest — uv-glibc stage"
+    kind: dockerfile
+    sourceid: uvGlibcDigest
+    spec:
+      file: Dockerfile
+      stage: uv-glibc
+      instruction:
+        keyword: "FROM"
+        matcher: "dhi.io/uv"
+
+  updateUvMusl:
+    name: "Bump ghcr.io/astral-sh/uv digest — uv-musl stage"
+    kind: dockerfile
+    sourceid: uvMuslDigest
+    spec:
+      file: Dockerfile
+      stage: uv-musl
+      instruction:
+        keyword: "FROM"
+        matcher: "ghcr.io/astral-sh/uv"
+
+  # Switched from kind: dockerfile to kind: file. The nfpm FROM line has no
+  # explicit tag (image@sha256:... only), and the dockerfile FROM target's
+  # documented "append a tag when none is found" behaviour isn't specified
+  # for a line that already carries a digest — matching the exact current
+  # string by regex sidesteps that ambiguity entirely.
+  updateNfpm:
+    name: "Bump goreleaser/nfpm digest — nfpm stage"
+    kind: dockerfile
+    sourceid: nfpmDigest
+    spec:
+      file: Dockerfile
+      stage: nfpm
+      instruction:
+        keyword: "FROM"
+        matcher: "goreleaser/nfpm"

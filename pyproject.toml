@@ -1,6 +1,6 @@
 [project]
 name = "overheadadsb"
-version = "1.0.2"
+version = "1.19.0"
 description = "ADS-B telemetry enrichment API"
 requires-python = ">=3.14"
 dependencies = [
@@ -23,17 +23,37 @@ dev = [
     "pdfplumber>=0.11.10",
     "nodriver>=0.50.3",
     "bandit>=1.9.4",
+    "pytest-asyncio>=1.4.0",
+    "respx>=0.23.1",
 ]
+
+[tool.uv]
+# `uv audit` and `uv export --no-dev` (used by the version-bump guard's
+# dev-only-dependency carve-out) are both recent additions - this pins
+# a floor so a stale runner uv fails loudly instead of behaving
+# differently. `uv audit` landed in the 0.11.x series per uv's own
+# changelog; dependency-groups support is much older.
+required-version = ">=0.11"
 
 [build-system]
 requires = ["uv_build>=0.12,<0.13"]
 build-backend = "uv_build"
 
 [tool.basedpyright]
-include = ["src","scripts"]
+include = ["src", "tests"]
 typeCheckingMode = "standard"
 # stubPath = "typings"
 exclude = ["**/node_modules", "**/__pycache__", "**/.*", ".venv", "typings", "scripts"]
 
 [tool.ruff]
-exclude = ["typings"]
+exclude = ["typings", ".ansible"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "uv"
+update_changelog_on_bump = false

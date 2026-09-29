@@ -24,6 +24,16 @@ logger = logging.getLogger("overhead_poller")
 
 
 class PollCache:
+    """Holds the latest poll result and the state needed to produce it.
+
+    `_client` and `_db_pool` (when `DATABASE_URL` is set) are always
+    assigned by `poll_loop` before any method that asserts they're non-None
+    is reachable. Those asserts are pure type-narrowing for the type
+    checker, not a runtime safety net -- they'd be stripped under
+    `python -O`, which is fine here since nothing security-relevant depends
+    on them actually firing.
+    """
+
     def __init__(self):
         self._lock: asyncio.Lock = asyncio.Lock()
         self._overhead: Aircraft | None = None
@@ -98,16 +108,37 @@ class PollCache:
             return self._owner_poll_cache[icao]
 
         assert self._client is not None
+        owner: str | None = None
         try:
             response = await self._client.get(config.HEXDB_URL + icao)
-            _ = response.raise_for_status()
-            owner = HEXDBResponse.model_validate(response.json()).RegisteredOwners
-        except httpx.HTTPError as e:
+            if response.status_code == 404:
+                # hexdb.io's documented response for an aircraft it doesn't
+                # know about -- a real answer, not a failure, so it's cached
+                # below like any other lookup. Left uncached (the old
+                # behaviour, since 404 raises HTTPStatusError which is a
+                # subtype of the httpx.HTTPError caught below), this hits
+                # hexdb.io again every single poll for as long as the
+                # aircraft stays overhead -- against hexdb.io's own "one
+                # lookup per new aircraft, cache it" usage guidance, and the
+                # common case for most aircraft, not an edge case.
+                metrics.hexdb_lookups_total.labels(result="not_found").inc()
+            else:
+                _ = response.raise_for_status()
+                owner = HEXDBResponse.model_validate(response.json()).RegisteredOwners
+                metrics.hexdb_lookups_total.labels(result="miss").inc()
+        except (httpx.HTTPError, json.JSONDecodeError, ValidationError) as e:
+            # Also covers a malformed hexdb.io body (invalid JSON, or JSON
+            # that doesn't match HEXDBResponse): previously only
+            # httpx.HTTPError was caught here, so either case escaped
+            # _identify_owner uncaught, past poll_once's own try/except
+            # (which only wraps the adsb.fi call above), and crashed the
+            # whole poll -- after _record_sighting had already run, so the
+            # sighting count for that aircraft was inflated without ever
+            # publishing an `overhead` for that cycle.
             logger.warning("HexDB lookup failed for %s: %s", icao, e)
             metrics.hexdb_lookups_total.labels(result="error").inc()
             return None  # not cached — retried next time this aircraft is seen
 
-        metrics.hexdb_lookups_total.labels(result="miss").inc()
         self._owner_poll_cache[icao] = owner
         if len(self._owner_poll_cache) > config.OWNER_POLL_CACHE_MAX:
             _ = self._owner_poll_cache.popitem(last=False)

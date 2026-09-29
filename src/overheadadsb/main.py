@@ -9,12 +9,13 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
 from prometheus_fastapi_instrumentator import Instrumentator
 
+from overheadadsb import __version__ as overheadadsb_version
 from overheadadsb import config
 from overheadadsb.models import (
     Aircraft,
     AircraftCategory,
     APIResponse,
-    ErrorDetail,
+    ErrorResponse,
     HealthResponse,
     Meta,
 )
@@ -22,6 +23,14 @@ from overheadadsb.poller import poll_cache
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("overhead_main")
+
+if config.LAT == "0.000" and config.LON == "0.000":
+    # Both env vars unset: silently polling the Gulf of Guinea is a much
+    # harder thing to notice and debug than a log line at startup.
+    logger.warning(
+        "LAT/LON are not set — defaulting to 0.000, 0.000. "
+        "No aircraft will ever be in range until these are configured."
+    )
 
 
 @asynccontextmanager
@@ -37,7 +46,7 @@ async def lifespan(_app: FastAPI):
 
 app = FastAPI(
     title="Overhead ADS-B",
-    version="1.0.0",
+    version=overheadadsb_version,
     lifespan=lifespan,
 )
 
@@ -75,13 +84,13 @@ async def overhead():
     "/api/v1/overhead/FR24",
     responses={
         404: {
-            "model": ErrorDetail,
+            "model": ErrorResponse,
             "description": (
                 "No aircraft currently in range, or the nearest one has no registration"
             ),
         },
         502: {
-            "model": ErrorDetail,
+            "model": ErrorResponse,
             "description": "FlightRadar24 unreachable",
         },
     },
@@ -142,7 +151,7 @@ async def nearest_flightradar24():
     response_model=HealthResponse,
     responses={
         503: {
-            "model": ErrorDetail,
+            "model": ErrorResponse,
             "description": "Poller is unhealthy, or hasn't completed a successful poll yet",
         },
     },

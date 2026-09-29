@@ -1,0 +1,449 @@
+---
+name: Build, Scan, Push Image
+"on":
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'packaging/nfpm.yaml'
+      - 'pyproject.toml'
+      - '.dockerignore'
+      - '.python-version'
+      - 'Dockerfile'
+      - 'uv.lock'
+      - '.forgejo/workflows/build-scan.push.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  REGISTRY: ${{ vars.REGISTRY }}
+  IMAGE: ${{ vars.REGISTRY }}/${{ github.repository }}
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  test:
+    runs-on: docker
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - name: Check uv.lock Is In Sync
+        run: uv lock --check
+
+      - name: Audit Python Dependencies
+        run: uv audit --frozen
+
+      - name: Log In To Registry
+        env:
+          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          printf '%s' "$REGISTRY_TOKEN" | docker login "$REGISTRY" \
+            -u "$REGISTRY_USER" --password-stdin
+
+      - name: Log In To dhi.io
+        env:
+          DHI_USER: ${{ secrets.DHI_USER }}
+          DHI_TOKEN: ${{ secrets.DHI_TOKEN }}
+        run: |
+          printf '%s' "$DHI_TOKEN" | docker login dhi.io \
+            -u "$DHI_USER" --password-stdin
+
+      - name: Lint, Type Check & Test
+        run: |
+          docker buildx inspect forgejo-builder >/dev/null 2>&1 || \
+            docker buildx create --name forgejo-builder --use
+          docker buildx build \
+            --pull \
+            --cache-from "type=registry,ref=${IMAGE}:buildcache" \
+            --cache-from "type=registry,ref=${IMAGE}:buildcache-test" \
+            --cache-to \
+              "type=registry,ref=${IMAGE}:buildcache-test,mode=max" \
+            --target test \
+            .
+
+      - name: Log Out Of dhi.io
+        if: always()
+        run: docker logout dhi.io
+
+      - name: Log Out Of Registry
+        if: always()
+        run: docker logout "$REGISTRY"
+
+  build:
+    needs: test
+    runs-on: docker
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Guard Version Bump
+        id: guard
+        if: github.event_name == 'push'
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          set -eo pipefail
+          if [ -z "$BEFORE" ] || \
+             [ "$BEFORE" = "0000000000000000000000000000000000000000" ] || \
+             ! git cat-file -e "$BEFORE" 2>/dev/null; then
+            echo "No previous ref position to diff against, skipping guard."
+            exit 0
+          fi
+
+          bash packaging/guard-version-bump.sh "$BEFORE" HEAD
+
+      - name: Set Image Tags
+        id: vars
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -eo pipefail
+          sha="$(git rev-parse --short HEAD)"
+          branch="$(printf '%s' "$REF_NAME" \
+            | tr '[:upper:]' '[:lower:]' \
+            | tr -c 'a-z0-9._-' '-' \
+            | sed -E 's/^[-.]+//' \
+            | cut -c1-100)"
+          echo "sha=${sha}" >> "$GITHUB_OUTPUT"
+          echo "branch_tag=${branch}-${sha}" >> "$GITHUB_OUTPUT"
+
+      - name: Set Release Version
+        id: release
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -eo pipefail
+          version="$(uv version --short)"
+          if [ -z "$version" ]; then
+            echo "::error::Could not determine project version via" \
+              "'uv version --short'"
+            exit 1
+          fi
+          {
+            echo "semver=v${version}"
+            echo "semver_major_minor=v${version%.*}"
+            echo "semver_major=v${version%%.*}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Log In To Registry
+        env:
+          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          printf '%s' "$REGISTRY_TOKEN" | docker login "$REGISTRY" \
+            -u "$REGISTRY_USER" --password-stdin
+
+      - name: Log In To dhi.io
+        env:
+          DHI_USER: ${{ secrets.DHI_USER }}
+          DHI_TOKEN: ${{ secrets.DHI_TOKEN }}
+        run: |
+          printf '%s' "$DHI_TOKEN" | docker login dhi.io \
+            -u "$DHI_USER" --password-stdin
+
+      # Checked BEFORE building. A tag that already exists is never
+      # rebuilt or overwritten. On push that is an error (the version
+      # was not bumped); on a manual dispatch it is a harmless no-op.
+      - name: Check Semver Tag Not Already Published
+        id: version-check
+        if: github.ref == 'refs/heads/main'
+        env:
+          SEMVER: ${{ steps.release.outputs.semver }}
+          EVENT_NAME: ${{ github.event_name }}
+          RUNTIME_UNCHANGED: ${{ steps.guard.outputs.runtime_unchanged }}
+        run: |
+          set -eo pipefail
+          if docker buildx imagetools inspect "${IMAGE}:${SEMVER}" \
+              >/dev/null 2>&1; then
+            if [ "$EVENT_NAME" = "workflow_dispatch" ] || \
+               [ "$RUNTIME_UNCHANGED" = "true" ]; then
+              echo "${IMAGE}:${SEMVER} is already published;" \
+                "skipping build/scan/push/deploy."
+              echo "should_publish=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "::error::${IMAGE}:${SEMVER} already exists in the" \
+              "registry. Bump the version in pyproject.toml before" \
+              "merging to main."
+            exit 1
+          fi
+          echo "${IMAGE}:${SEMVER} not yet published, proceeding."
+          echo "should_publish=true" >> "$GITHUB_OUTPUT"
+
+      - name: Build Image
+        id: build
+        if: steps.version-check.outputs.should_publish != 'false'
+        env:
+          SHA: ${{ steps.vars.outputs.sha }}
+          BRANCH_TAG: ${{ steps.vars.outputs.branch_tag }}
+          SEMVER: ${{ steps.release.outputs.semver }}
+          SEMVER_MAJOR_MINOR: ${{ steps.release.outputs.semver_major_minor }}
+          SEMVER_MAJOR: ${{ steps.release.outputs.semver_major }}
+          IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          set -eo pipefail
+          docker buildx inspect forgejo-builder >/dev/null 2>&1 || \
+            docker buildx create --name forgejo-builder --use
+
+          # Normalizes the image config's `created` timestamp (and layer
+          # history) so two builds of the same commit produce the same
+          # image config instead of only differing by build wall-clock.
+          SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)
+          export SOURCE_DATE_EPOCH
+
+          TAGS=(-t "${IMAGE}:${SHA}")
+          if [ "$IS_MAIN" = "true" ]; then
+            TAGS+=(
+              -t "${IMAGE}:${SEMVER}"
+              -t "${IMAGE}:${SEMVER_MAJOR_MINOR}"
+              -t "${IMAGE}:${SEMVER_MAJOR}"
+              -t "${IMAGE}:latest"
+            )
+          else
+            TAGS+=(-t "${IMAGE}:${BRANCH_TAG}")
+          fi
+
+          docker buildx build \
+            --pull \
+            --platform linux/amd64 \
+            --target runtime \
+            --build-arg SOURCE_DATE_EPOCH="$SOURCE_DATE_EPOCH" \
+            --cache-from "type=registry,ref=${IMAGE}:buildcache" \
+            --cache-to "type=registry,ref=${IMAGE}:buildcache,mode=max" \
+            "${TAGS[@]}" \
+            --load \
+            .
+
+      - name: Log Out Of dhi.io
+        if: always()
+        run: docker logout dhi.io
+
+      - name: Get Trivy DB Cache Key Date
+        id: trivy-date
+        if: steps.version-check.outputs.should_publish != 'false'
+        run: echo "date=$(date -u +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Trivy DB
+        if: steps.version-check.outputs.should_publish != 'false'
+        # yamllint disable-line rule:line-length
+        uses: https://github.com/actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
+        with:
+          path: ~/.cache/trivy
+          key: trivy-db-${{ runner.os }}-${{ steps.trivy-date.outputs.date }}
+          restore-keys: |
+            trivy-db-${{ runner.os }}-
+
+      - name: Generate SBOM
+        if: steps.version-check.outputs.should_publish != 'false'
+        env:
+          SHA: ${{ steps.vars.outputs.sha }}
+        run: |
+          trivy image \
+            --cache-dir ~/.cache/trivy \
+            --format cyclonedx \
+            --output sbom.cdx.json \
+            "${IMAGE}:${SHA}"
+
+      - name: Scan Image
+        if: steps.version-check.outputs.should_publish != 'false'
+        run: |
+          trivy sbom \
+            --cache-dir ~/.cache/trivy \
+            --exit-code 1 \
+            --ignore-unfixed \
+            --severity CRITICAL,HIGH \
+            --ignorefile packaging/.trivyignore \
+            sbom.cdx.json
+
+      - name: Push Image
+        id: push
+        if: steps.version-check.outputs.should_publish != 'false'
+        env:
+          SHA: ${{ steps.vars.outputs.sha }}
+          BRANCH_TAG: ${{ steps.vars.outputs.branch_tag }}
+          SEMVER: ${{ steps.release.outputs.semver }}
+          SEMVER_MAJOR_MINOR: ${{ steps.release.outputs.semver_major_minor }}
+          SEMVER_MAJOR: ${{ steps.release.outputs.semver_major }}
+          IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          set -eo pipefail
+          TAGS=("${IMAGE}:${SHA}")
+          if [ "$IS_MAIN" = "true" ]; then
+            TAGS+=(
+              "${IMAGE}:${SEMVER}"
+              "${IMAGE}:${SEMVER_MAJOR_MINOR}"
+              "${IMAGE}:${SEMVER_MAJOR}"
+              "${IMAGE}:latest"
+            )
+          else
+            TAGS+=("${IMAGE}:${BRANCH_TAG}")
+          fi
+
+          for tag in "${TAGS[@]}"; do
+            docker push "$tag"
+          done
+
+          FORMAT='{{range .RepoDigests}}{{println .}}{{end}}'
+          DIGEST=$(docker inspect --format="$FORMAT" "${IMAGE}:${SHA}" \
+            | grep -F "${IMAGE}@" | head -n1 | cut -d'@' -f2)
+          if [ -z "$DIGEST" ]; then
+            echo "Could not resolve pushed digest for ${IMAGE}" >&2
+            exit 1
+          fi
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
+
+      - name: Sign And Attest Image
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          steps.version-check.outputs.should_publish != 'false'
+        env:
+          COSIGN_KEY: ${{ secrets.COSIGN_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          PUSHED_DIGEST: ${{ steps.push.outputs.digest }}
+        run: |
+          IMAGE_REF="${IMAGE}@${PUSHED_DIGEST}"
+          cosign sign --key env://COSIGN_KEY --yes \
+            --use-signing-config=false --tlog-upload=false "$IMAGE_REF"
+          cosign attest --key env://COSIGN_KEY --yes \
+            --use-signing-config=false --tlog-upload=false \
+            --predicate sbom.cdx.json \
+            --type cyclonedx \
+            "$IMAGE_REF"
+
+      - name: Clean Up Local Images
+        if: always()
+        env:
+          SHA: ${{ steps.vars.outputs.sha }}
+          BRANCH_TAG: ${{ steps.vars.outputs.branch_tag }}
+          SEMVER: ${{ steps.release.outputs.semver }}
+          SEMVER_MAJOR_MINOR: ${{ steps.release.outputs.semver_major_minor }}
+          SEMVER_MAJOR: ${{ steps.release.outputs.semver_major }}
+          IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          TAGS=("${IMAGE}:${SHA}")
+          if [ "$IS_MAIN" = "true" ]; then
+            TAGS+=(
+              "${IMAGE}:${SEMVER}"
+              "${IMAGE}:${SEMVER_MAJOR_MINOR}"
+              "${IMAGE}:${SEMVER_MAJOR}"
+              "${IMAGE}:latest"
+            )
+          else
+            TAGS+=("${IMAGE}:${BRANCH_TAG}")
+          fi
+          docker rmi "${TAGS[@]}" 2>/dev/null || true
+
+      - name: Log Out Of Registry
+        if: always()
+        run: docker logout "$REGISTRY"
+
+      - name: Trigger Deployment
+        if: >-
+          success() && github.ref == 'refs/heads/main' &&
+          steps.version-check.outputs.should_publish != 'false'
+        env:
+          N8N_DEPLOY_WEBHOOK_URL: ${{ secrets.N8N_DEPLOY_WEBHOOK_URL }}
+          N8N_WEBHOOK_TOKEN: ${{ secrets.N8N_WEBHOOK_TOKEN }}
+          SEMAPHORE_URL: ${{ secrets.SEMAPHORE_URL }}
+          SEMAPHORE_PROJECT_ID: ${{ vars.SEMAPHORE_PROJECT_ID }}
+          SEMAPHORE_DEPLOY_TEMPLATE_ID: ${{ vars.SEMAPHORE_DEPLOY_TEMPLATE_ID }}
+          SEMAPHORE_ROLLBACK_TMPL_ID: ${{ vars.SEMAPHORE_ROLLBACK_TEMPLATE_ID }}
+          APPRISE_URL: ${{ secrets.APPRISE_URL }}
+          REPOSITORY: ${{ github.repository }}
+          WORKFLOW: ${{ github.workflow }}
+          EVENT_NAME: ${{ github.event_name }}
+          RUN_URL: >-
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{
+            github.run_id }}
+          IMAGE_SHA: ${{ steps.vars.outputs.sha }}
+          IMAGE_DIGEST: ${{ steps.push.outputs.digest }}
+          SEMVER: ${{ steps.release.outputs.semver }}
+        run: |
+          set -eo pipefail
+          PAYLOAD=$(jq -n \
+            --arg repository "$REPOSITORY" \
+            --arg triggered_by "$EVENT_NAME" \
+            --arg workflow "$WORKFLOW" \
+            --arg run_url "$RUN_URL" \
+            --arg status "success" \
+            --arg image_tag "$IMAGE_SHA" \
+            --arg image_digest "$IMAGE_DIGEST" \
+            --arg semver "$SEMVER" \
+            --arg semaphore_url "$SEMAPHORE_URL" \
+            --argjson semaphore_project_id "$SEMAPHORE_PROJECT_ID" \
+            --argjson semaphore_deploy_template_id \
+              "$SEMAPHORE_DEPLOY_TEMPLATE_ID" \
+            --argjson semaphore_rollback_template_id \
+              "$SEMAPHORE_ROLLBACK_TMPL_ID" \
+            --arg apprise_url "$APPRISE_URL" \
+            '{repository: $repository, triggered_by: $triggered_by,
+              workflow: $workflow, run_url: $run_url, status: $status,
+              image_tag: $image_tag, image_digest: $image_digest,
+              semver: $semver, semaphore_url: $semaphore_url,
+              semaphore_project_id: $semaphore_project_id,
+              semaphore_deploy_template_id: $semaphore_deploy_template_id,
+              semaphore_rollback_template_id: $semaphore_rollback_template_id,
+              apprise_url: $apprise_url}')
+          curl \
+            --fail-with-body \
+            --show-error \
+            --silent \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "X-Webhook-Token: ${N8N_WEBHOOK_TOKEN}" \
+            -d "$PAYLOAD" \
+            "$N8N_DEPLOY_WEBHOOK_URL"
+
+  notify:
+    needs: [test, build]
+    if: '!cancelled()'
+    runs-on: docker
+    timeout-minutes: 5
+    steps:
+      - name: Notify n8n
+        continue-on-error: true
+        env:
+          N8N_WEBHOOK_URL: ${{ secrets.N8N_WEBHOOK_URL }}
+          N8N_WEBHOOK_TOKEN: ${{ secrets.N8N_WEBHOOK_TOKEN }}
+          APPRISE_URL: ${{ secrets.APPRISE_URL }}
+          REPOSITORY: ${{ github.repository }}
+          WORKFLOW: ${{ github.workflow }}
+          RUN_URL: >-
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{
+            github.run_id }}
+          TEST_RESULT: ${{ needs.test.result }}
+          BUILD_RESULT: ${{ needs.build.result }}
+        run: |
+          set -eo pipefail
+          STATUS=success
+          for result in "$TEST_RESULT" "$BUILD_RESULT"; do
+            case "$result" in
+              success|skipped) ;;
+              *) STATUS=failure ;;
+            esac
+          done
+          PAYLOAD=$(jq -n \
+            --arg repository "$REPOSITORY" \
+            --arg workflow "$WORKFLOW" \
+            --arg status "$STATUS" \
+            --arg run_url "$RUN_URL" \
+            --arg apprise_url "$APPRISE_URL" \
+            '{repository: $repository, workflow: $workflow,
+              status: $status, run_url: $run_url,
+              apprise_url: $apprise_url}')
+          curl \
+            --fail-with-body \
+            --show-error \
+            --silent \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "X-Webhook-Token: ${N8N_WEBHOOK_TOKEN}" \
+            -d "$PAYLOAD" \
+            "$N8N_WEBHOOK_URL"

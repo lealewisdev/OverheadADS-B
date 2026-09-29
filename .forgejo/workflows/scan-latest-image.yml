@@ -10,15 +10,17 @@ permissions:
 env:
   REGISTRY: ${{ vars.REGISTRY }}
   IMAGE_REF: ${{ vars.REGISTRY }}/${{ github.repository }}:latest
+concurrency:
+  group: scan-latest-image
+  cancel-in-progress: true
 jobs:
   scan-images:
     runs-on: docker
     timeout-minutes: 15
     steps:
       - name: Checkout
-        # v7.0.1
         # yamllint disable-line rule:line-length
-        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: https://github.com/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
 
       - name: Log In To Registry
         env:
@@ -36,9 +38,8 @@ jobs:
         run: echo "date=$(date -u +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
 
       - name: Cache Trivy DB
-        # v6.1.0
         # yamllint disable-line rule:line-length
-        uses: https://github.com/actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        uses: https://github.com/actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
         with:
           path: ~/.cache/trivy
           key: trivy-db-${{ runner.os }}-${{ steps.trivy-date.outputs.date }}
@@ -49,26 +50,34 @@ jobs:
         run: |
           trivy image \
             --cache-dir ~/.cache/trivy \
+            --scanners vuln \
             --exit-code 1 \
             --ignore-unfixed \
             --severity CRITICAL,HIGH \
             --ignorefile packaging/.trivyignore \
             "$IMAGE_REF"
 
-      - name: Check For Stale Trivy Ignores
-        id: prune
-        if: '!cancelled()'
-        continue-on-error: true
-        run: |
-          bash packaging/prune-trivyignore.sh \
-            packaging/.trivyignore "$IMAGE_REF"
+      - name: Clean Up Local Image
+        if: always()
+        run: docker rmi "$IMAGE_REF" 2>/dev/null || true
 
       - name: Log Out Of Registry
         if: always()
         run: docker logout "$REGISTRY"
 
+  prune-trivyignore:
+    needs: scan-images
+    if: '!cancelled()'
+    uses: ./.forgejo/workflows/prune-trivyignore.yml
+    secrets: inherit
+
+  notify:
+    needs: [scan-images, prune-trivyignore]
+    if: '!cancelled()'
+    runs-on: docker
+    timeout-minutes: 5
+    steps:
       - name: Notify n8n
-        if: '!cancelled()'
         continue-on-error: true
         env:
           N8N_WEBHOOK_URL: ${{ secrets.N8N_WEBHOOK_URL }}
@@ -76,11 +85,23 @@ jobs:
           APPRISE_URL: ${{ secrets.APPRISE_URL }}
           REPOSITORY: ${{ github.repository }}
           WORKFLOW: ${{ github.workflow }}
-          JOB_STATUS: ${{ job.status }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}
-            /actions/runs/${{ github.run_id }}
+          SCAN_RESULT: ${{ needs.scan-images.result }}
+          PRUNE_RESULT: ${{ needs.prune-trivyignore.result }}
+          RUN_URL: >-
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{
+            github.run_id }}
         run: |
           set -eo pipefail
+          PAYLOAD=$(jq -n \
+            --arg repository "$REPOSITORY" \
+            --arg workflow "$WORKFLOW" \
+            --arg status "$SCAN_RESULT" \
+            --arg trivyignore_status "$PRUNE_RESULT" \
+            --arg run_url "$RUN_URL" \
+            --arg apprise_url "$APPRISE_URL" \
+            '{repository: $repository, workflow: $workflow,
+              status: $status, trivyignore_status: $trivyignore_status,
+              run_url: $run_url, apprise_url: $apprise_url}')
           curl \
             --fail-with-body \
             --show-error \
@@ -88,9 +109,5 @@ jobs:
             -X POST \
             -H "Content-Type: application/json" \
             -H "X-Webhook-Token: ${N8N_WEBHOOK_TOKEN}" \
-            -d "{
-              \"repository\":\"${REPOSITORY}\",\"workflow\":\"${WORKFLOW}\",
-              \"run_url\":\"${RUN_URL}\",\"status\":\"${JOB_STATUS}\",
-              \"apprise_url\":\"${APPRISE_URL}\"
-            }" \
+            -d "$PAYLOAD" \
             "$N8N_WEBHOOK_URL"

@@ -36,7 +36,6 @@ clients
 prek.toml
 renovate.json
 prune-trivyignore.sh
-nfpm.yaml
 
 # Documentation / project metadata
 README.md

@@ -16,9 +16,21 @@
       "pinDigests": true
     },
     {
+      "description": "pyenv can't hold a digest in .python-version; pinning it made the pin-dependencies branch fail",
+      "matchManagers": ["pyenv"],
+      "pinDigests": false
+    },
+    {
       "description": "Keep the uv image and the uv_build backend moving together",
       "matchPackageNames": ["uv_build", "dhi.io/uv", "ghcr.io/astral-sh/uv"],
       "groupName": "uv"
+    },
+    {
+      "description": "One PR for all auto-mergeable Dockerfile digest bumps",
+      "matchManagers": ["dockerfile"],
+      "matchPackageNames": ["dhi.io/python", "dhi.io/uv", "ghcr.io/astral-sh/uv"],
+      "matchUpdateTypes": ["digest"],
+      "groupName": "base image digests"
     },
     {
       "description": "Automerge patch/minor bumps for dev-only tooling (ruff, basedpyright, bandit, pytest, etc.)",
@@ -53,6 +65,31 @@
       "matchManagers": ["dockerfile"],
       "matchPackageNames": ["goreleaser/nfpm"],
       "automerge": false
+    },
+    {
+      "description": "Automerge SHA-pinned Forgejo Actions digest bumps",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["digest"],
+      "automerge": true
+    },
+    {
+      "description": "Patch-bump the project version whenever a Dockerfile pin changes",
+      "matchManagers": ["dockerfile"],
+      "matchFileNames": ["Dockerfile"],
+      "bumpVersions": [
+        {
+          "name": "Bump pyproject.toml version",
+          "filePatterns": ["pyproject.toml"],
+          "matchStrings": ["(?:^|\\n)version\\s*=\\s*\"(?<version>[^\"]+)\""],
+          "bumpType": "patch"
+        },
+        {
+          "name": "Keep uv.lock root package version in sync",
+          "filePatterns": ["uv.lock"],
+          "matchStrings": ["name = \"overheadadsb\"\\nversion = \"(?<version>[^\"]+)\""],
+          "bumpType": "patch"
+        }
+      ]
     }
   ]
 }
