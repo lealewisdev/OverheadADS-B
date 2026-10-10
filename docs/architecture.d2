@@ -1,0 +1,33 @@
+direction: right
+
+adsb: "adsb.fi aircraft feed"
+hexdb: "hexdb.io owner lookup"
+squawks: "UK squawk CSV"
+helicopters: "Helicopter designator CSV"
+postgres: "PostgreSQL (optional)" {
+  shape: cylinder
+}
+fr24: "Flightradar24"
+
+service: "Overhead ADS-B (FastAPI)" {
+  poller: "Background poller"
+  cache: "Latest aircraft snapshot + owner LRU"
+  api: "HTTP API"
+  metrics: "Prometheus /metrics (optional)"
+  poller -> cache: "publish nearest aircraft"
+  cache -> api: "snapshot and health"
+}
+
+quickshell: "Quickshell widget"
+rainmeter: "Rainmeter skin"
+alloy: "Metrics scraper (optional)"
+
+adsb -> service.poller: "aircraft within configured radius"
+service.poller -> hexdb: "owner lookup on cache miss"
+squawks -> service.poller: "squawk descriptions"
+helicopters -> service.poller: "helicopter classification"
+service.poller -> postgres: "sighting counts, if configured"
+service.api -> fr24: "registration redirect lookup"
+service.api -> quickshell: "GET /api/v1/overhead"
+service.api -> rainmeter: "GET /api/v1/overhead"
+service.metrics -> alloy: "scraped when enabled"

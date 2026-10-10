@@ -8,6 +8,15 @@ into a one-line "what's flying overhead right now" readout.
 
 ## How it works
 
+The editable [D2 architecture diagram](docs/architecture.d2) shows the poller,
+reference data, optional persistence and metrics, API endpoints, and clients.
+Render it with [`d2`](https://d2lang.com/) using:
+
+```bash
+d2 docs/architecture.d2 architecture.svg
+```
+
+
 ```text
  adsb.fi ──┐
  hexdb.io ─┼─▶ overheadadsb ──▶ /api/v1/overhead ──▶ desktop widgets
@@ -266,7 +275,6 @@ designators from the FAA order (see [TODO](#todo)).
 
 ## TODO
 
-- Add D2 diagram
 - Switch from FAA Order JO 7360.1J to ICAO Doc 8643 aircraft-type
    description and generate aircraft type designators reffreences for all types
    instead of just helicopters
